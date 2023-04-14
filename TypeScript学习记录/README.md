@@ -97,5 +97,9 @@ TS新增类型，固定长度的数组 [4,5]
 ```
 + 枚举类型（enum）
 ```
-TS中新增类型 enum{A,B}
+TS中新增类型 
+enum Gender {
+  Male = 0,
+  Female = 1
+}
 ```
