@@ -129,7 +129,7 @@ enum Gender {
 ### 二、面向对象
 面向对象是一种重要的编程思想，基于这种编程思想，程序中所有的事物都被认为是一种对象，对象包含两部分数据和功能，以人为例，人就是一个对象，人的姓名、年龄、性别等属于数据，而人可以吃饭、睡觉、说话这些就属于人的功能，数据在对象中被称为属性，而功能被称为方法。
 
-1、类（class）
+#### 1、类（class）
 要想面向对象，首先要拥有对象，TS中通过类（class）来创建对象。
 + 定义类
 ```
@@ -161,7 +161,153 @@ class Person {
   }
 }
 ```
-2、构造函数和this
-3、类的继承
-4、super关键字
-5、抽象类
++ 介绍
+```
+/**
+ * 直接定义的属性，需要通过对象的实例去访问：
+ * const per = new Person();
+ * per.name
+ * 
+ * readonly开头的属性表示一个只读的属性，无法修改
+ * 
+ * 使用static开头的属性是静态属性（类属性），可以通过类去访问：
+ * Person.gender
+ * 
+ */
+class Person {
+  // 定义实例属性
+  name: string = "甘雨";
+  readonly age: number = 12;
+  // 使用static关键字可以定义类属性（静态属性）
+  static gender: string = "女";
+
+  sayHello() {
+    console.log("你好！")
+  }
+
+  /**
+  * 定义方法：
+  * 如果方法以static开头则方法就是类方法，可以直接通过类去调用
+  */
+  static run() {
+    console.log('开始跑了！')
+  }
+}
+
+const one = new Person() // 实例化
+one.sayHello()
+one.name = '胡桃'
+Person.run()
+```
+
+#### 2、构造函数和this
+```
+class Dog {
+  name: string;
+  age: number;
+  /**
+   * constructor 被称为构造函数
+   * 构造函数会在对象创建时调用
+   */
+  constructor(name: string, age: number) {
+    // 在实例方法中，this就表示当前的实例
+    this.name = name;
+    this.age = age;
+  }
+  bark() {
+    // 在方法中可以通过this来表示当前调用的对象
+    console.log(`${this.age}岁的${this.name}在汪汪汪！`);
+  }
+}
+```
+
+#### 3、类的继承
+```
+class Animal {
+  name: string;
+  age: number;
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+  sayHello() {
+    console.log(`${this.age}岁的${this.name}在叫！`);
+  }
+}
+
+/**
+ * Cat extends Animal
+ * - 此时，Animal被称为父类，Cat被称为子类
+ * - 使用继承后，子类将会拥有父类所有的方法和属性
+ * - 通过继承可以将多个类中共有的代买写在一个父类中，这样
+ *   只需要写一次即可让所有的子类同时拥有父类中的属性和方法
+ * - 如果子类中添加了和父类相同名字的方法，则子类中的方法会覆盖
+ *   父类中的方法,这种子类覆盖掉父类中方法的形式，我们称之为方法的重写
+ */
+class Cat extends Animal {
+  constructor(name: string, age: number) {
+    // super初始化父类的构造函数
+    super(name, age)
+  }
+  meow() {
+    console.log(`${this.age}岁的${this.name}在喵喵喵！`);
+  }
+}
+```
+
+#### 4、super关键字
+```
+class Game {
+  name: string;
+  constructor(name: string) {
+    this.name = name
+  }
+
+  introduce() {
+    console.log("我是一款游戏！");
+
+  }
+}
+
+class ShootingGame extends Game {
+  age: number;
+  // 如果在子类中写了构造函数，在子类构造函数中必须对父类的构造函数进行调用
+  constructor(name: string, age: number) {
+    super(name) // 调用父类的构造函数
+    this.age = age
+  }
+  introduce() {
+    // 在类的方法中super就表示当前类的父类
+    super.introduce()
+  }
+}
+```
+
+#### 5、抽象类
+```
+/**
+   * - 以abstract开头的类是抽象类，抽象类和其他类区别不大，只是不能用来创建对象
+   * - 抽象类就是专门用来被继承的类
+   * - 抽象类中可以添加抽象方法，抽像类中的抽象方法不包含具体的实现并且必须在子类中实现
+   */
+  abstract class Game {
+    name: string;
+    constructor(name: string) {
+      this.name = name
+    }
+
+    abstract introduce(): void;
+  }
+
+  class ShootingGame extends Game {
+    age: number;
+    // 如果在子类中写了构造函数，在子类构造函数中必须对父类的构造函数进行调用
+    constructor(name: string, age: number) {
+      super(name) // 调用父类的构造函数
+      this.age = age
+    }
+    introduce() {
+      console.log("实现了父类的抽象方法！")
+    }
+  }
+```
