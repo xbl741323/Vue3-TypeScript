@@ -141,3 +141,4 @@ let r: numType;
 let m: numType;
 r = 1;
 m = 1;
+console.log('2')

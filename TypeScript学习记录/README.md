@@ -55,51 +55,109 @@ a = '2' // 错误
 ```
 
 3、类型介绍
+
 + 数字类型（number）
+
 ```
 任意数字
 ```
+
 + 字符串类型（string）
+
 ```
 任意字符串
 ```
+
 + 布尔类型（boolean）
+
 ```
 布尔值true或false
 ```
+
 + 任意类型（any）
+
 ```
 任意类型
 ```
+
 + 未知类型（unknown）
+
 ```
  类型安全的any
 ```
+
 + void类型
+
 ```
  没有值但可以返回（null或undefined）
 ```
+
 + never类型
+
 ```
  不能是任何值（也不可以返回null或undefined）
 ```
+
 + 对象类型（object）
+
 ```
 任意js对象
 ```
+
 + 数组类型（array）
+
 ```
 任意js数组
 ```
+
 + 元组类型（tuple）
+
 ```
 TS新增类型，固定长度的数组 [4,5]
 ```
+
 + 枚举类型（enum）
+
 ```
 TS中新增类型 
 enum Gender {
   Male = 0,
   Female = 1
+}
+```
+
+### 二、面向对象
+面向对象是一种重要的编程思想，基于这种编程思想，程序中所有的事物都被认为是一种对象，对象包含两部分数据和功能，以人为例，人就是一个对象，人的姓名、年龄、性别等属于数据，而人可以吃饭、睡觉、说话这些就属于人的功能，数据在对象中被称为属性，而功能被称为方法。
+
+1、类（class）
+要想面向对象，首先要拥有对象，TS中通过类（class）来创建对象。
++ 定义类
+```
+class 类名 {
+  属性名：类型；
+
+  constructor(参数：类型){
+    this.属性名 = 参数
+  }
+
+  方法名(){
+    ...
+  }
+}
+```
++ 示例：
+```
+class Person {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  sayHello() {
+    console.log(`我叫${this.name}，今年${this.age}岁`)
+  }
 }
 ```
