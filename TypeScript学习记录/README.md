@@ -311,3 +311,149 @@ class ShootingGame extends Game {
     }
   }
 ```
+
+#### 6、接口
+```
+/**
+ * - 1、接口用来定义一个类结构，用来定义一个类中应该包含哪些属性和方法
+ * - 2、同时接口也可以当成类型声明去使用
+ */
+
+interface myInterface {
+  name: string;
+  age: number;
+}
+
+interface myInterface {
+  gender: string;
+}
+
+const obj: myInterface = {
+  name: "甘雨",
+  age: 18,
+  gender: "女"
+}
+
+/**
+ * - 接口可以在定义类的时候去限制类的结构
+ * - 接口中所有的属性都不能有实际的值
+ * - 接口只定义对象的结构，而不考虑实际值
+ * - 在接口中所有的方法都是抽象方法
+ */
+interface myInter {
+  name: string;
+  sayHello(): void;
+}
+
+/**
+ * 定义类时，可以使类去实现一个接口，实现接口就是使类满足接口的要求
+ */
+class MyClass implements myInter {
+  name: string;
+  constructor(name: string) {
+    this.name = name
+  }
+  sayHello(): void {
+    console.log("大家好！");
+  }
+}
+```
+
+#### 7、属性的封装
+```
+/**
+   * 修饰符：
+   * 1、public:公有类型     在类里面、子类、类外面都可以访问
+   * 2、protected:保护类型  在类里面、子类里面可以访问，在类外部没法访问
+   * 3、private:私有类型    
+   * 在类里面可以访问，子类、类外部都没法访问，可以通过在类中添加方法
+   * 使得私有属性可以被外部访问
+   * 
+   */
+  class Person {
+    private name: string;
+    private age: number;
+    constructor(name: string, age: number) {
+      this.name = name
+      this.age = age
+    }
+    sayHello() {
+      console.log("你好！")
+    }
+    /**
+     * getter方法用来读取属性
+     * setter方法用来设置属性
+     * - 它们被称为属性的存取器
+     */
+
+    // 定义方法，用来获取age属性
+    getAge() {
+      return this.age
+    }
+
+    // 定义方法，用来设置age属性，只能通过此方法来修改年龄，提高安全性
+    setAge(value: number) {
+      // 判断年龄是否合法
+      if (value >= 0) {
+        this.age = value
+      }
+    }
+
+    // TS中设置getter的方式
+    get _name() {
+      return this.name
+    }
+
+    // TS中设置setter的方式
+    set _name(value: string) {
+      this.name = value
+    }
+  }
+  const per = new Person("甘雨", 18)
+  /**
+   * 现在属性是在对象中设置的，属性可以任意的被修改，这会
+   * 导致对象中的数据变得非常不安全
+   * 
+   */
+  // per.age = -18
+  per.setAge(-20)
+  per._name = "胡桃"
+  console.log(per)
+
+  class A {
+    protected name: string;
+    constructor(name: string) {
+      this.name = name
+    }
+  }
+
+  class B extends A {
+    test() {
+      console.log(this.name);
+    }
+  }
+
+  const b = new B("小b")
+  b.test()
+
+  // class C {
+  //   name: string;
+  //   constructor(name: string) {
+  //     this.name = name
+  //   }
+  //   test() {
+  //     console.log(this.name);
+  //   }
+  // }
+
+  class C {
+    // 可以直接将属性定义在构造函数中
+    constructor(public name: string) { }
+    test() {
+      console.log(this.name);
+    }
+  }
+
+  const c = new C("小c")
+  c.test()
+```
