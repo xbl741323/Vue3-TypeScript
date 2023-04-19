@@ -3,7 +3,7 @@
 ## 一、学习Vue3第一章
 
 ### 1、Vue3新特性介绍
-+ 1、重写双向绑定
+#### 1、重写双向绑定
 ```
 vue2 基于Object.defineProperty()实现
 vue3 基于Proxy
@@ -22,11 +22,11 @@ Object.defineProperty的优势如下：
 
 兼容性好，支持IE9，而Proxy的存在浏览器的兼容问题，而且无法用polyfill(垫片)来弥补
 
-+ 2、Vue3 优化Vdom
+#### 2、Vue3 优化Vdom
 
 在Vue2中,每次更新diff,都是全量对比,Vue3则只对比带有标记的,这样大大减少了非动态内容的对比消耗
 
-+ 3、Vue3 Fragment
+#### 3、Vue3 Fragment
 
 vue3 允许我们支持多个根节点
 ```
@@ -37,10 +37,12 @@ vue3 允许我们支持多个根节点
 ```
 同时支持render JSX 写法，新增了Suspense teleport和多v-model用法
 
-+ 4、Vue3 Tree shaking
+#### 4、Vue3 Tree shaking
+
 简单来讲，就是在保持代码运行结果不变的前提下，去除无用的代码，在Vue2中，无论我们使用什么功能，它们最终都会出现在生产代码中。主要原因是Vue实例在项目中是单例的，捆绑程序无法检测到该对象的哪些属性在代码中被使用到，而Vue3源码引入tree shaking特性，将全局 API 进行分块。如果你不使用其某些功能，它们将不会包含在你的基础包中，就是比如你要用watch 就是import {watch} from 'vue' 其他的computed 没用到就不会给你打包减少体积
 
-+ 5、Vue 3 Composition Api
+#### 5、Vue 3 Composition Api
+
 Setup 语法糖式编程 
 
 ### 2、nvm介绍与使用
