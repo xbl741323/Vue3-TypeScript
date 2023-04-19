@@ -61,7 +61,7 @@ nvm current 查看当前使用的node版本
 
 ### 3、项目脚手架创建
 ```
-npm init vue@latest // 专门为vue定制的
+npm init vue@latest // Vue官方的项目脚手架
 或
-npm init vite@latest // 支持多种框架vue react等
+npm init vite@latest // 支持多种框架Vue React等
 ```
