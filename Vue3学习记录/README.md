@@ -9,22 +9,25 @@ vue2 基于Object.defineProperty()实现
 vue3 基于Proxy
 ```
 proxy与Object.defineProperty(obj, prop, desc)方式优势对比如下：
-```
+
 Proxy的优势：
-1.Proxy可以直接监听对象而不是属性(Object.defineProperty一次只能监视一个属性，如果要监视一个对象，那么需要遍历这个对象)，可以直接监听数组的变化(Object.defineProperty需要对7个核心数组进行重写才能监视数组)
 
-2.Proxy有多达13中拦截方法，不限于apply,ownKeys,deleteProperty等等，这些是Object.defineProperty所不具备的
+1、Proxy可以直接监听对象而不是属性(Object.defineProperty一次只能监视一个属性，如果要监视一个对象，那么需要遍历这个对象)，可以直接监听数组的变化(Object.defineProperty需要对7个核心数组进行重写才能监视数组)
 
-3.Proxy返回的是一个新的对象，我们可以只操作新的对象来达到目的，而Object.defineProperty只能遍历对象属性直接修改
-```
-```
+2、Proxy有多达13中拦截方法，不限于apply,ownKeys,deleteProperty等等，这些是Object.defineProperty所不具备的
+
+3、Proxy返回的是一个新的对象，我们可以只操作新的对象来达到目的，而Object.defineProperty只能遍历对象属性直接修改
+
 Object.defineProperty的优势如下：
+
 兼容性好，支持IE9，而Proxy的存在浏览器的兼容问题，而且无法用polyfill(垫片)来弥补
-```
+
 + 2、Vue3 优化Vdom
+
 在Vue2中,每次更新diff,都是全量对比,Vue3则只对比带有标记的,这样大大减少了非动态内容的对比消耗
 
 + 3、Vue3 Fragment
+
 vue3 允许我们支持多个根节点
 ```
 <template>
