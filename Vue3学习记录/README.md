@@ -59,3 +59,9 @@ nvm use 14.5.0 切换 14.5.0 版本的 node.js
 nvm current 查看当前使用的node版本
 ```
 
+### 3、项目脚手架创建
+```
+npm init vue@latest // 专门为vue定制的
+或
+npm init vite@latest // 支持多种框架vue react等
+```
