@@ -3,11 +3,14 @@
 ## 一、学习Vue3第一章
 
 ### 1、Vue3新特性介绍
+
 #### 1、重写双向绑定
+
 ```
 vue2 基于Object.defineProperty()实现
 vue3 基于Proxy
 ```
+
 proxy与Object.defineProperty(obj, prop, desc)方式优势对比如下：
 
 Proxy的优势：
@@ -29,12 +32,14 @@ Object.defineProperty的优势如下：
 #### 3、Vue3 Fragment
 
 vue3 允许我们支持多个根节点
+
 ```
 <template>
   <div></div>
   <div></div>
 </template>
 ```
+
 同时支持render JSX 写法，新增了Suspense teleport和多v-model用法
 
 #### 4、Vue3 Tree shaking
@@ -43,11 +48,14 @@ vue3 允许我们支持多个根节点
 
 #### 5、Vue 3 Composition Api
 
-Setup 语法糖式编程 
+Setup 语法糖式编程
 
 ### 2、nvm介绍与使用
+
 Vue3需要16.0或更高版本的Node.js支持，这里推荐使用nvm进行Node版本的切换，nvm可以在一台电脑上安装多个 Node.js 版本，并且可以一条指令随时下载或切换版本，而不需要频繁地下载/卸载不同版本的 node.js 来满足当前项目的要求。
+
 + 官方下载地址：`https://github.com/coreybutler/nvm-windows/releases`
+
 ```
 常用命令：
 nvm --version 显示nvm版本
@@ -60,8 +68,11 @@ nvm current 查看当前使用的node版本
 ```
 
 ### 3、项目脚手架创建
+
 ```
 npm init vue@latest // Vue官方的项目脚手架
 或
 npm init vite@latest // 支持多种框架Vue React等
 ```
+
+### 4、Vue3语法介绍
