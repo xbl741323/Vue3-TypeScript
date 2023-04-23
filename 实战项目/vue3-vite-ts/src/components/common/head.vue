@@ -1,11 +1,11 @@
 <template>
-  <div class="head-contain">{{ title }}</div>
+  <div class="head-contain">{{ props.title }}</div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  title: string
-}>()
+const props = defineProps({
+  title: { type: String, required: true },
+})
 </script>
 
 <style scoped>

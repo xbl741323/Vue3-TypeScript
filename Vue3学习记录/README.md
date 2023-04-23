@@ -77,3 +77,28 @@ npm init vite@latest // 支持多种框架Vue React等
 + 项目创建完成以后在vscode中安装一下Vue Language Features(Volar)和TypeScript Vue Plugin(Volar)就可以编写Vue3代码了（Vue2的Vetur需要禁用，不然会有冲突）
 
 ### 4、Vue3语法介绍
++ 1、TypeScript 与组合式 API
+
+组合式 API (Composition API) 是一系列 API 的集合，使我们可以使用函数而不是声明选项的方式书写 Vue 组件。
+```
+<template></template>
+
+<script setup lang='ts'>
+import { ref, reactive } from 'vue'
+
+</script>
+
+<style scoped></style>
+```
+组合式 API 最基本的优势是它使我们能够通过组合函数来实现更加简洁高效的逻辑复用。在选项式 API 中我们主要的逻辑复用机制是 mixins，而组合式 API 解决了 mixins 的所有缺陷。
+```
+更多组合式API常见解答见官网：https://cn.vuejs.org/guide/extras/composition-api-faq.html
+```
+
++ 2、ref与reactive
++ 3、父子组件传值
++ 4、计算属性
++ 5、watch和watchEffect
++ 6、生命周期
++ 7、路由跳转
+

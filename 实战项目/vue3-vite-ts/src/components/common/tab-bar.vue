@@ -50,8 +50,10 @@ const tabList = reactive(
 )
 
 const router = useRouter();
+const emit = defineEmits(['changeTitle'])
 const toPage = (name: string, index: number) => {
   activeIndex.value = index
+  emit('changeTitle', tabList[index].title)
   router.push({
     name: name
   });
