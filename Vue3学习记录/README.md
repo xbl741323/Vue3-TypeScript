@@ -74,5 +74,6 @@ npm init vue@latest // Vue官方的项目脚手架
 或
 npm init vite@latest // 支持多种框架Vue React等
 ```
++ 项目创建完成以后在vscode中安装一下Vue Language Features(Volar)和TypeScript Vue Plugin(Volar)就可以编写Vue3代码了（Vue2的Vetur需要禁用，不然会有冲突）
 
 ### 4、Vue3语法介绍
