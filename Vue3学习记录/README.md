@@ -129,3 +129,80 @@ a.name = '甘雨'
 
 #### 7、路由跳转
 
+#### 8、其它Composition API
++ toRef
+```
+作用：创建一个ref对象，其value值指向另一个对象中的某个属性值
+const a = reactive({
+  name:'甘雨'
+})
+const name = toRef(a,'name')
+应用：要将响应式对象中的某个属性单独提供给外部使用时
+注意：只对响应式对象有用，修改非响应式对象视图无变化
+```
+
++ toRefs
+```
+作用：toRefs与toRef功能一致，但可以批量创建多个ref对象
+const a = reactive({
+  name: '甘雨',
+  gender: '女',
+  age: 18
+})
+const {name,gender,age} = toRefs(a)
+应用：需要解构获取响应式对象的属性值时
+原理解释：
+const toRefs = <T extends object>(a:T){
+  const map:any = {}
+  for(let key in a){
+    map[key] = toRef(a,key)
+  }
+  return map
+}
+```
++ toRaw
+```
+作用：将一个由reactive生成的对象转为普通对象
+const a = reactive({
+  name: '甘雨',
+  gender: '女',
+  age: 18
+})
+toRaw(a)
+```
++ markRaw
+```
+作用：标记一个对象，使其永远不会再成为响应式对象
+应用场景：
+(1)：有些值不应被设置为响应式的，例如复杂的第三方类库等
+(2)：当渲染具有不可变数据源的大列表时，跳过响应式转换可以提高性能
+```
+
++ 响应式数据的判断
+```
+isRef：检查一个值是为一个ref对象
+isReactive：检查一个对象是否是由reactive创建的响应式代理
+isReadonly：检查一个对象是否是由readonly创建的只读代理
+isProxy：检查一个对象是否是由reactive或者readonly方法创建的代理
+```
++ readonly与shallowReadonly
+```
+readonly：让一个响应式数据变为只读的（深只读）
+shallowReadonly：让一个响应式数据变为只读的（浅只读，reactive创建的对象数据第一层不能改）
+应用场景：不希望数据被修改时
+```
+
++ shallowReactive与shallowRef
+```
+shallowReactive：只处理对象最外层属性的响应式（浅响应式）
+shallowRef：只处理基本数据类型的响应式，不进行对象的响应式处理
+使用场景：
+如果有一个对象数据，结构比较深，但变化时只是外层属性变化 ==> shallowReactive
+如果有一个对象，后续功能不会修改该对象中的属性，而是生成新的对象来替换 ==> shallowRef
+```
+
++ customRef
+```
+作用：创建一个自定义的ref，并对其依赖项跟踪和更新触发进行显式控制，案例：实现防抖效果
+```
+
