@@ -77,7 +77,7 @@ npm init vite@latest // 支持多种框架Vue React等
 + 项目创建完成以后在vscode中安装一下Vue Language Features(Volar)和TypeScript Vue Plugin(Volar)就可以编写Vue3代码了（Vue2的Vetur需要禁用，不然会有冲突）
 
 ### 4、Vue3语法介绍
-+ 1、TypeScript 与组合式 API
+#### 1、TypeScript 与组合式 API
 
 组合式 API (Composition API) 是一系列 API 的集合，使我们可以使用函数而不是声明选项的方式书写 Vue 组件。
 ```
@@ -95,10 +95,37 @@ import { ref, reactive } from 'vue'
 更多组合式API常见解答见官网：https://cn.vuejs.org/guide/extras/composition-api-faq.html
 ```
 
-+ 2、ref与reactive
-+ 3、父子组件传值
-+ 4、计算属性
-+ 5、watch和watchEffect
-+ 6、生命周期
-+ 7、路由跳转
+#### 2、ref与reactive
++ 1、ref函数
+```
+1、作用：定义一个响应式的数据，主要用于基本类型
+import { ref } from 'vue'
+const a = ref(0)
+2、js中操作数据：a.value
+a.value = 1
+3、模板中读取数据：不需要.value，直接<div>{{a}}</div>
+```
+
++ 2、reactive函数
+
+```
+1、作用：定义一个对象（或数组）类型的响应式数据（基本类型别用它，用ref函数）
+import { reactive } from 'vue'
+const a = reactive({
+  name:'胡桃'
+})
+2、js中操作数据：不需要a.value，直接操作
+a.name = '甘雨'
+3、reactive定义的响应式数据是"深层次的"
+```
+
+#### 3、父子组件传值
+
+#### 4、计算属性
+
+#### 5、watch和watchEffect
+
+#### 6、生命周期
+
+#### 7、路由跳转
 
