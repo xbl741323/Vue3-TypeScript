@@ -119,11 +119,65 @@ a.name = '甘雨'
 3、reactive定义的响应式数据是"深层次的"
 ```
 
-#### 3、父子组件传值
+#### 3、计算属性
+```
+功能：与Vue2.x中computed配置功能一致
+<template>
+  <div class="contain">
+    <h1>{{ name }}</h1>
+    <h1>{{ getName }}</h1>
+  </div>
+</template>
 
-#### 4、计算属性
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+let name = ref('胡桃')
+let getName = computed(() => {
+  return `我是${name}`
+})
+</script>
 
-#### 5、watch和watchEffect
+<style scoped></style>
+```
+
+#### 4、watch和watchEffect
++ 1、watch的作用是：既要指明监视的属性，也要指明监视的回调。
++ 2、watchEffect的作用是：不用指明监视哪个属性，监视的回调中用到哪个属性，那就监视哪个属性。
+```
+watch功能与Vue2.x中computed配置功能一致
+watchEffect有点像computed：
+但computed注重的计算出来的值（回调函数的返回值），所以必须要写返回值。
+而watchEffect更注重的是过程（回调函数的函数体），所以不用写返回值。
+
+<template>
+  <div class="contain">
+    <div @click="changeName()">点我改名</div>
+    <h1>{{ name }}</h1>
+    <h1>{{ getName }}</h1>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, watchEffect } from 'vue';
+let name = ref('胡桃')
+let changeName = () => {
+  name.value = '甘雨'
+}
+// watch
+watch(name, (oldVal, newVal) => {
+  console.log(oldVal, 'oldVal')
+  console.log(newVal, 'oldVal')
+})
+// watchEffect
+watchEffect(() => {
+  console.log(name.value, 'watchEffect')
+})
+</script>
+
+<style scoped></style>
+```
+
+#### 5、父子组件传值
 
 #### 6、生命周期
 

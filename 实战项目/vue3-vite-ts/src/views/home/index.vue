@@ -1,11 +1,30 @@
 <template>
   <div class="contain">
+    <div @click="changeName()">点我改名</div>
     <h1>{{ name }}</h1>
+    <h1>{{ getName }}</h1>
   </div>
 </template>
 
 <script setup lang="ts">
-let name: string = '首页'
+import { computed, ref, watch, watchEffect } from 'vue';
+let name = ref('胡桃')
+let changeName = () => {
+  name.value = '甘雨'
+}
+// 计算属性
+let getName = computed(() => {
+  return `我是${name.value}`
+})
+// watch
+watch(name, (oldVal, newVal) => {
+  console.log(oldVal, 'oldVal')
+  console.log(newVal, 'oldVal')
+})
+// watchEffect
+watchEffect(() => {
+  console.log(name.value, 'watchEffect')
+})
 </script>
 
 <style scoped></style>
