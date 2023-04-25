@@ -1,10 +1,8 @@
 # Vue3学习记录
 
-## 一、学习Vue3第一章
+## 一、Vue3新特性介绍
 
-### 1、Vue3新特性介绍
-
-#### 1、重写双向绑定
+### 1、重写双向绑定
 
 ```
 vue2 基于Object.defineProperty()实现
@@ -25,11 +23,11 @@ Object.defineProperty的优势如下：
 
 兼容性好，支持IE9，而Proxy的存在浏览器的兼容问题，而且无法用polyfill(垫片)来弥补
 
-#### 2、Vue3 优化Vdom
+### 2、Vue3 优化Vdom
 
 在Vue2中,每次更新diff,都是全量对比,Vue3则只对比带有标记的,这样大大减少了非动态内容的对比消耗
 
-#### 3、Vue3 Fragment
+### 3、Vue3 Fragment
 
 vue3 允许我们支持多个根节点
 
@@ -42,15 +40,15 @@ vue3 允许我们支持多个根节点
 
 同时支持render JSX 写法，新增了Suspense teleport和多v-model用法
 
-#### 4、Vue3 Tree shaking
+### 4、Vue3 Tree shaking
 
 简单来讲，就是在保持代码运行结果不变的前提下，去除无用的代码，在Vue2中，无论我们使用什么功能，它们最终都会出现在生产代码中。主要原因是Vue实例在项目中是单例的，捆绑程序无法检测到该对象的哪些属性在代码中被使用到，而Vue3源码引入tree shaking特性，将全局 API 进行分块。如果你不使用其某些功能，它们将不会包含在你的基础包中，就是比如你要用watch 就是import {watch} from 'vue' 其他的computed 没用到就不会给你打包减少体积
 
-#### 5、Vue 3 Composition Api
+### 5、Vue 3 Composition Api
 
 Setup 语法糖式编程
 
-### 2、nvm介绍与使用
+## 二、nvm介绍与使用
 
 Vue3需要16.0或更高版本的Node.js支持，这里推荐使用nvm进行Node版本的切换，nvm可以在一台电脑上安装多个 Node.js 版本，并且可以一条指令随时下载或切换版本，而不需要频繁地下载/卸载不同版本的 node.js 来满足当前项目的要求。
 
@@ -67,7 +65,7 @@ nvm use 14.5.0 切换 14.5.0 版本的 node.js
 nvm current 查看当前使用的node版本
 ```
 
-### 3、项目脚手架创建
+## 三、项目脚手架创建
 
 ```
 npm init vue@latest // Vue官方的项目脚手架
@@ -76,8 +74,8 @@ npm init vite@latest // 支持多种框架Vue React等
 ```
 + 项目创建完成以后在vscode中安装一下Vue Language Features(Volar)和TypeScript Vue Plugin(Volar)就可以编写Vue3代码了（Vue2的Vetur需要禁用，不然会有冲突）
 
-### 4、Vue3语法介绍
-#### 1、TypeScript 与组合式 API
+## 四、Vue3语法介绍
+### 1、TypeScript 与组合式 API
 
 组合式 API (Composition API) 是一系列 API 的集合，使我们可以使用函数而不是声明选项的方式书写 Vue 组件。
 ```
@@ -95,7 +93,7 @@ import { ref, reactive } from 'vue'
 更多组合式API常见解答见官网：https://cn.vuejs.org/guide/extras/composition-api-faq.html
 ```
 
-#### 2、ref与reactive
+### 2、ref与reactive
 + 1、ref函数
 ```
 1、作用：定义一个响应式的数据，主要用于基本类型
@@ -119,7 +117,7 @@ a.name = '甘雨'
 3、reactive定义的响应式数据是"深层次的"
 ```
 
-#### 3、计算属性
+### 3、计算属性
 ```
 功能：与Vue2.x中computed配置功能一致
 <template>
@@ -140,7 +138,7 @@ let getName = computed(() => {
 <style scoped></style>
 ```
 
-#### 4、watch和watchEffect
+### 4、watch和watchEffect
 + 1、watch的作用是：既要指明监视的属性，也要指明监视的回调。
 + 2、watchEffect的作用是：不用指明监视哪个属性，监视的回调中用到哪个属性，那就监视哪个属性。
 ```
@@ -232,11 +230,11 @@ watchEffect(() => {
 <style scoped></style>
 ```
 
-#### 5、生命周期
+### 5、生命周期
 
-#### 6、父子组件传值
+### 6、父子组件传值
 
-#### 7、其它Composition API
+### 7、其它Composition API
 + toRef
 ```
 作用：创建一个ref对象，其value值指向另一个对象中的某个属性值
@@ -313,7 +311,7 @@ shallowRef：只处理基本数据类型的响应式，不进行对象的响应�
 作用：创建一个自定义的ref，并对其依赖项跟踪和更新触发进行显式控制，案例：实现防抖效果
 ```
 
-### 5、Router（路由）
+## 五、Router（路由）
 
-### 6、pinia（轻量级的状态管理库）
+## 六、pinia（轻量级的状态管理库）
 
