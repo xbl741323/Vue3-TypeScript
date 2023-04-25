@@ -17,9 +17,9 @@ let getName = computed(() => {
   return `我是${name.value}`
 })
 // watch
-watch(name, (oldVal, newVal) => {
+watch(name, (newVal, oldVal) => {
+  console.log(newVal, 'newVal')
   console.log(oldVal, 'oldVal')
-  console.log(newVal, 'oldVal')
 })
 // watchEffect
 watchEffect(() => {
