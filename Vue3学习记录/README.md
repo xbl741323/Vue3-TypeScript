@@ -151,23 +151,78 @@ watchEffect有点像computed：
 
 <template>
   <div class="contain">
-    <div @click="changeName()">点我改名</div>
+    <div @click="changeVal()">点我改名</div>
     <h1>{{ name }}</h1>
     <h1>{{ getName }}</h1>
+    <h1>{{ age }}</h1>
+    <h1>{{ info.name }}{{ info.age }}{{ info.hobby.name }}</h1>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue';
-let name = ref('胡桃')
-let changeName = () => {
-  name.value = '甘雨'
+import { ref, reactive, watch, watchEffect } from 'vue';
+let name = ref<string>('胡桃')
+let age = ref<number>(18)
+type obj = {
+  name: string,
+  age: number,
+  hobby: {
+    name: string,
+  }
 }
-// watch
+let info = reactive<obj>({
+  name: '七七',
+  age: 8,
+  hobby: {
+    name: '玩游戏'
+  }
+})
+let changeVal = () => {
+  name.value = '甘雨'
+  age.value = 20
+  info.name = '可莉'
+  info.age = 18
+  info.hobby = {
+    name: '读书'
+  }
+}
+// watch 1、监视单响应个数据
 watch(name, (newVal, oldVal) => {
   console.log(newVal, 'newVal')
   console.log(oldVal, 'oldVal')
 })
+
+// watch 2、监视多个响应数据
+watch([name, age], (newVal, oldVal) => {
+  console.log(newVal, 'newVal')
+  console.log(oldVal, 'oldVal')
+})
+
+// watch 3、监视响应对象 immediate：true 初始化加载时执行监听 
+// 注意：此处无法正确获取oldValue
+watch(info, (newVal, oldVal) => {
+  console.log(newVal, 'newVal')
+  console.log(oldVal, 'oldVal')
+}, { immediate: true })
+
+// watch 4、监视reactive所定义的一个响应式对象数据中的某个属性
+watch(() => info.age, (newVal, oldVal) => {
+  console.log(newVal, 'newVal age')
+  console.log(oldVal, 'oldVal age')
+}, { immediate: true }
+
+// watch 5、监视reactive所定义的一个响应式对象数据中的多个属性
+watch([() => info.name,() => info.age], (newVal, oldVal) => {
+  console.log(newVal, 'newVal name age')
+  console.log(oldVal, 'oldVal name age')
+}, { immediate: true }
+
+// watch 6、监视reactive所定义的一个响应式对象数据中的对象属性，deep: true 对对象进行深度监听
+watch(() => info.hobby, (newVal, oldVal) => {
+  console.log(newVal, 'newVal hobby')
+  console.log(oldVal, 'oldVal hobby')
+}, { immediate: true, deep: true })
+
 // watchEffect
 watchEffect(() => {
   console.log(name.value, 'watchEffect')
