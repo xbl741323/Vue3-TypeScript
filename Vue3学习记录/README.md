@@ -308,7 +308,7 @@ onUnmounted(() => {
 ```
 
 ### 6、父子组件传值
-+ 父组件传递参数给子组件
++ 父组件传值给子组件
 ```
 <template>
   <Head :title="title"></Head>
@@ -321,9 +321,8 @@ import { ref } from 'vue'
 const title = ref('首页')
 </script>
 ```
-+ 子组件接收父组件参数
++ 子组件接收父组件值
 ```
-// 子组件接收父组件参数
 <script setup lang="ts">
 // 方式1：运行时声明
 const props = defineProps({
