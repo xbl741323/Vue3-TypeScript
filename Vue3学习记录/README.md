@@ -308,8 +308,8 @@ onUnmounted(() => {
 ```
 
 ### 6、父子组件传值
++ 父组件传递参数给子组件
 ```
-// 父组件传递参数给子组件
 <template>
   <Head :title="title"></Head>
   <button @click="toPage('甘雨',13)"></button>
@@ -320,7 +320,9 @@ import Head from '@/components/common/head.vue'
 import { ref } from 'vue'
 const title = ref('首页')
 </script>
-
+```
++ 子组件接收父组件参数
+```
 // 子组件接收父组件参数
 <script setup lang="ts">
 // 方式1：运行时声明
@@ -369,8 +371,9 @@ defineExpose({
   }
 })
 </script>
-
-// 父组件使用子组件暴露的属性和方法
+```
++ 父组件使用子组件暴露的属性和方法
+```
 <template>
   // 1、绑定ref
   <Head :title="title" @changeTitle="changeHeadTitle" ref="head"></Head>
