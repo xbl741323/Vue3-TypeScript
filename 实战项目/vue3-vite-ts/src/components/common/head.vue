@@ -8,9 +8,15 @@
 // })
 
 // 使用泛型接收
-const props = defineProps<{
+// const props = defineProps<{
+//   title: string
+// }>()
+
+const props = withDefaults(defineProps<{
   title: string
-}>()
+}>(), {
+  title: '我是默认值',
+})
 </script>
 
 <style scoped>
