@@ -333,7 +333,6 @@ const props = defineProps<{
   title: string
 }>()
 
-
 // 子组件使用emit传递参数给父组件
 const emit = defineEmits(['changeTitle'])
 const toPage = (name: string, index: number) => {
