@@ -154,6 +154,7 @@ watchEffect有点像computed：
     <h1>{{ getName }}</h1>
     <h1>{{ age }}</h1>
     <h1>{{ info.name }}{{ info.age }}{{ info.hobby.name }}</h1>
+    <button @click="stopWatch()">停止监听</button>
   </div>
 </template>
 
@@ -221,16 +222,90 @@ watch(() => info.hobby, (newVal, oldVal) => {
   console.log(oldVal, 'oldVal hobby')
 }, { immediate: true, deep: true })
 
-// watchEffect
+// watchEffect 1、立即运行一个函数，同时响应式地追踪其依赖，并在依赖更改时重新执行。
 watchEffect(() => {
   console.log(name.value, 'watchEffect')
 })
+
+// watchEffect 2、onInvalidate可以在执行监听前执行
+watchEffect((onInvalidate) => {
+  console.log(name.value, 'watchEffect')
+  onInvalidate(() => {
+    console.log('before')
+  })
+})
+
+// watchEffect 3、停止侦听器：
+const stop = watchEffect((onInvalidate) => {
+  console.log(name.value, 'watchEffect')
+  onInvalidate(() => {
+    console.log('before')
+  })
+})
+
+const stopWatch = () => stop()
+
+// watchEffect 4、设置 flush: 'post' 将会使侦听器延迟到组件渲染之后再执行。
+watchEffect(() => {}, {
+  flush: 'post',
+  onTrack(e) {
+    debugger
+  },
+  onTrigger(e) {
+    debugger
+  }
+})
+
 </script>
 
 <style scoped></style>
 ```
 
 ### 5、生命周期
+Vue3.0中也提供了Composition API形式的生命周期钩子，与Vue2.x中钩子对应关系如下：
++ beforeCreate ==> setup()
++ created ==> setup()
++ beforeMount ==> onBeforeMount
++ mounted ==> onMounted
++ beforeUpdate ==> onBeforeUpdate
++ updated ==> onUpdated
++ beforeUnmount ==> onBeforeUnmount
++ unmounted ==> onUnmounted
+```
+<script setup lang="ts">
+import { onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted } from 'vue';
+
+// 创建前-读取不到dom
+onBeforeMount(() => {
+  console.log('onBeforeMount')
+})
+
+// 创建完成-可以读取dom
+onMounted(() => {
+  console.log('onMounted')
+})
+
+// 更新前-获取的是更新前的dom
+onBeforeUpdate(() => {
+  console.log('onBeforeUpdate')
+})
+
+// 更新完成-获取的是更新完成后的dom
+onUpdated(() => {
+  console.log('onUpdated')
+})
+
+// 销毁前
+onBeforeUnmount(() => {
+  console.log('onBeforeUnmount')
+})
+
+// 销毁完成
+onUnmounted(() => {
+  console.log('onUnmounted')
+})
+</script>
+```
 
 ### 6、父子组件传值
 

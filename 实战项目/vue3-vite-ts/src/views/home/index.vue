@@ -5,6 +5,7 @@
     <h1>{{ getName }}</h1>
     <h1>{{ age }}</h1>
     <h1>{{ info.name }}{{ info.age }}{{ info.hobby.name }}</h1>
+    <button @click="stopWatch()">停止监听</button>
   </div>
 </template>
 
@@ -58,7 +59,7 @@ watch(() => info.age, (newVal, oldVal) => {
 }, { immediate: true })
 
 // watch 5、监视reactive所定义的一个响应式对象数据中的多个属性
-watch([() => info.name,() => info.age], (newVal, oldVal) => {
+watch([() => info.name, () => info.age], (newVal, oldVal) => {
   console.log(newVal, 'newVal name age')
   console.log(oldVal, 'oldVal name age')
 }, { immediate: true })
@@ -69,9 +70,14 @@ watch(() => info.hobby, (newVal, oldVal) => {
   console.log(oldVal, 'oldVal hobby')
 }, { immediate: true, deep: true })
 // watchEffect
-watchEffect(() => {
+const stop = watchEffect((onInvalidate) => {
   console.log(name.value, 'watchEffect')
+  onInvalidate(() => {
+    console.log('before')
+  })
 })
+
+const stopWatch = () => stop()
 </script>
 
 <style scoped></style>
