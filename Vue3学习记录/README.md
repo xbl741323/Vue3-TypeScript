@@ -353,7 +353,9 @@ const emit = defineEmits<{
   (e: 'changeTitle', name: string, index: number): void
   (e: 'changeName', name: string, index: number): void
 }>()
+
 const toPage = (name: string, index: number) => {
+  // 使用
   emit('changeTitle', name, index)
   emit('changeName', name, index)
 };
