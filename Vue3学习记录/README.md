@@ -345,8 +345,12 @@ const props = withDefaults(defineProps<{
     return: `我是默认值`
   }
 })
-
-// 子组件使用emit传递参数给父组件
+</script>
+```
++ 子组件使用emit传值给父组件，以及暴露属性和方法给父组件
+```
+<script setup lang="ts">
+// 子组件使用emit传值给父组件
 // 1、运行时
 const emit = defineEmits(['changeTitle','changeName'])
 
@@ -362,8 +366,9 @@ const toPage = (name: string, index: number) => {
   emit('changeName', name, index)
 };
 
-const activeIndex = ref(0)
+
 // 子组件暴露给父组件的属性和方法
+const activeIndex = ref(0)
 defineExpose({
   activeIndex,
   open:()=>{
