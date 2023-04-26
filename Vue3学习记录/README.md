@@ -312,6 +312,7 @@ onUnmounted(() => {
 // 父组件传递参数给子组件
 <template>
   <Head :title="title"></Head>
+  <div @click="toPage('甘雨',13)"></div>
 </template>
 
 <script setup lang="ts">
@@ -331,13 +332,14 @@ const props = defineProps({
 const props = defineProps<{
   title: string
 }>()
-</script>
+
 
 // 子组件使用emit传递参数给父组件
 const emit = defineEmits(['changeTitle'])
 const toPage = (name: string, index: number) => {
   emit('changeTitle', name)
 };
+</script>
 ```
 
 ### 7、其它Composition API
