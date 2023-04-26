@@ -63,6 +63,13 @@ const toPage = (name: string, index: number) => {
     name: name
   });
 };
+
+defineExpose({
+  activeIndex,
+  open:()=>{
+    console.log('子组件暴露的open')
+  }
+})
 </script>
 
 <style scoped>

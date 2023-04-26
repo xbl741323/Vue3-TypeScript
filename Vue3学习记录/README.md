@@ -359,6 +359,35 @@ const toPage = (name: string, index: number) => {
   emit('changeTitle', name, index)
   emit('changeName', name, index)
 };
+
+const activeIndex = ref(0)
+// 子组件暴露给父组件的属性和方法
+defineExpose({
+  activeIndex,
+  open:()=>{
+    console.log('子组件暴露的open')
+  }
+})
+</script>
+
+// 父组件使用子组件暴露的属性和方法
+<template>
+  // 1、绑定ref
+  <Head :title="title" @changeTitle="changeHeadTitle" ref="head"></Head>
+</template>
+
+<script setup lang="ts">
+import Head from '@/components/common/head.vue'
+import { ref } from 'vue'
+const title = ref('首页')
+  // 2、使用InstanceType定义获取子组件暴露的值
+const head = ref<InstanceType<typeof Head>>()
+const changeHeadTitle = (val: string) => {
+  title.value = val
+  // 3、使用Head.value获取属性与方法
+  console.log(Head.value?.activeIndex,'子组件暴露的值')
+  head.value?.open()
+}
 </script>
 ```
 
