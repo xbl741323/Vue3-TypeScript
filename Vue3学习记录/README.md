@@ -345,9 +345,17 @@ const props = withDefaults(defineProps<{
 })
 
 // 子组件使用emit传递参数给父组件
-const emit = defineEmits(['changeTitle'])
+// 1、运行时
+const emit = defineEmits(['changeTitle','changeName'])
+
+// 2、基于类型
+const emit = defineEmits<{
+  (e: 'changeTitle', name: string, index: number): void
+  (e: 'changeName', name: string, index: number): void
+}>()
 const toPage = (name: string, index: number) => {
-  emit('changeTitle', name)
+  emit('changeTitle', name, index)
+  emit('changeName', name, index)
 };
 </script>
 ```
