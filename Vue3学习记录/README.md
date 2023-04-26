@@ -308,6 +308,37 @@ onUnmounted(() => {
 ```
 
 ### 6、父子组件传值
+```
+// 父组件传递参数给子组件
+<template>
+  <Head :title="title"></Head>
+</template>
+
+<script setup lang="ts">
+import Head from '@/components/common/head.vue'
+import { ref } from 'vue'
+const title = ref('首页')
+</script>
+
+// 子组件接收父组件参数
+<script setup lang="ts">
+// 方式1
+const props = defineProps({
+  title: { type: String, required: true },
+})
+
+// 方式2：使用泛型接收
+const props = defineProps<{
+  title: string
+}>()
+</script>
+
+// 子组件使用emit传递参数给父组件
+const emit = defineEmits(['changeTitle'])
+const toPage = (name: string, index: number) => {
+  emit('changeTitle', name)
+};
+```
 
 ### 7、其它Composition API
 + toRef

@@ -3,9 +3,14 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  title: { type: String, required: true },
-})
+// const props = defineProps({
+//   title: { type: String, required: true },
+// })
+
+// 使用泛型接收
+const props = defineProps<{
+  title: string
+}>()
 </script>
 
 <style scoped>
