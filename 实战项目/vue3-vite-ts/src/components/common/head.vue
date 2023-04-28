@@ -3,20 +3,22 @@
 </template>
 
 <script setup lang="ts">
-// const props = defineProps({
-//   title: { type: String, required: true },
-// })
+// 方式1：运行时声明
+const props = defineProps({
+  title: { type: String, required: true },
+})
 
-// 使用泛型接收
+// 方式2：基于类型的声明，使用泛型接收
 // const props = defineProps<{
 //   title: string
 // }>()
 
-const props = withDefaults(defineProps<{
-  title: string
-}>(), {
-  title: '我是默认值',
-})
+// 当使用基于类型的声明时，我们失去了为 props 声明默认值的能力，这可以通过 withDefaults 编译器宏解决
+// const props = withDefaults(defineProps<{
+//   title: string
+// }>(), {
+//   title: '我是默认值',
+// })
 </script>
 
 <style scoped>

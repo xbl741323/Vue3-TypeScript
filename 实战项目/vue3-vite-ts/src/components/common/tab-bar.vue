@@ -50,24 +50,26 @@ const tabList = reactive(
 )
 
 const router = useRouter();
-// const emit = defineEmits(['changeTitle'])
-const emit = defineEmits<{
-  (e: 'changeTitle', name: string, index: number): void
-  (e: 'changeName', name: string, index: number): void
-}>()
+// 1、运行时
+const emit = defineEmits(['changeTitle'])
+
+// 2、基于类型
+// const emit = defineEmits<{
+//   (e: 'changeTitle', name: string, index: number): void
+// }>()
 const toPage = (name: string, index: number) => {
   activeIndex.value = index
   emit('changeTitle', tabList[index].title, index)
-  emit('changeName', tabList[index].title, index)
   router.push({
     name: name
   });
 };
 
+// 向父组件暴露子组件的值
 defineExpose({
   activeIndex,
-  open:()=>{
-    console.log('子组件暴露的open')
+  open: () => {
+    console.log('子组件暴露的open方法')
   }
 })
 </script>

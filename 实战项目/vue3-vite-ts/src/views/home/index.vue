@@ -1,11 +1,10 @@
 <template>
   <div class="contain">
-    <div @click="changeVal()">点我改名</div>
+    <button @click="changeVal()">点我改名</button>
     <h1>{{ name }}</h1>
     <h1>{{ getName }}</h1>
     <h1>{{ age }}</h1>
     <h1>{{ info.name }}{{ info.age }}{{ info.hobby.name }}</h1>
-    <button @click="stopWatch()">停止监听</button>
   </div>
 </template>
 
@@ -13,7 +12,7 @@
 import { computed, ref, reactive, watch, watchEffect } from 'vue';
 let name = ref<string>('胡桃')
 let age = ref<number>(18)
-type obj = {
+interface obj {
   name: string,
   age: number,
   hobby: {
@@ -40,44 +39,26 @@ let changeVal = () => {
 let getName = computed(() => {
   return `我是${name.value}`
 })
-// watch 
+// watch-监视基本类型
 watch([name, age], (newVal, oldVal) => {
   console.log(newVal, 'newVal')
   console.log(oldVal, 'oldVal')
 })
 
-// watch
+// watch-监视对象
 watch(info, (newVal, oldVal) => {
   console.log(newVal, 'newVal')
   console.log(oldVal, 'oldVal')
 }, { immediate: true })
 
-// watch
-watch(() => info.age, (newVal, oldVal) => {
-  console.log(newVal, 'newVal age')
-  console.log(oldVal, 'oldVal age')
-}, { immediate: true })
-
-// watch 5、监视reactive所定义的一个响应式对象数据中的多个属性
-watch([() => info.name, () => info.age], (newVal, oldVal) => {
-  console.log(newVal, 'newVal name age')
-  console.log(oldVal, 'oldVal name age')
-}, { immediate: true })
-
-// watch
-watch(() => info.hobby, (newVal, oldVal) => {
-  console.log(newVal, 'newVal hobby')
-  console.log(oldVal, 'oldVal hobby')
-}, { immediate: true, deep: true })
 // watchEffect
-const stop = watchEffect((onInvalidate) => {
+watchEffect(() => {
   console.log(name.value, 'watchEffect')
-  onInvalidate(() => {
-    console.log('before')
-  })
 })
-
-const stopWatch = () => stop()
 </script>
 
-<style scoped></style>
+<style scoped>
+.contain{
+  padding: 5px;
+}
+</style>
