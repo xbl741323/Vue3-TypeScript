@@ -48,10 +48,13 @@ const router = useRouter();
 const toPage = (info: essayInter) => {
   router.push({
     name: 'policyDetail',
-    query: {
-      title: info.title,
-      content: info.content
+    params:{
+      id: 1
     }
+    // query: {
+    //   title: info.title,
+    //   content: info.content
+    // }
   })
 }
 </script>

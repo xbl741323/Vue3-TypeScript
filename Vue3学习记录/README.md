@@ -522,7 +522,125 @@ const router = createRouter({
 export default router
 ```
 
-### 2、嵌套路由
+### 2、编程式导航
++ 因为我们在 setup 里面没有访问 this，所以我们不能再直接访问 this.$router 或 this.$route。作为替代，我们使用 useRouter 和 useRoute
+```
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { reactive } from 'vue';
+interface essayInter {
+  id: number
+  title: string,
+  content: string,
+}
+
+const router = useRouter();
+const toPage = (info: essayInter) => {
+  router.push({
+    name: 'policyDetail',
+    query: {
+      title: info.title,
+      content: info.content
+    }
+  })
+}
+</script>
+```
++ 注意：在模板中我们仍然可以访问 $router 和 $route，所以不需要在 setup 中返回 router 或 route。
+```
+<template>
+  <div class="contain">
+    <span>{{ $route.query.title }}</span>
+  </div>
+</template>
+```
++ 注意：最新版本路由已经不支持 params传参（需要配合动态传参使用），可以通过 query 传参
+```
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { reactive } from 'vue';
+interface essayInter {
+  id: number
+  title: string,
+  content: string,
+}
+
+const router = useRouter();
+const toPage = (info: essayInter) => {
+  router.push({
+    name: 'policyDetail',
+    // 不支持params传参，获取的参数为空
+    // params: {
+    //   title: info.title,
+    //   content: info.content
+    // }
+    query: {
+      title: info.title,
+      content: info.content
+    }
+  })
+}
+</script>
+```
+
+### 3、动态传参
++ 路由页面配置参数id
+```
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/home/index.vue'
+import PolicyDetail from '@/views/policy/detail.vue'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/policyDetail/:id',  // 动态路由参数
+      name: 'policyDetail',
+      component: PolicyDetail
+    }
+  ]
+})
+
+export default router
+
+```
++ 传参页面
+```
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+interface essayInter {
+  id: number
+  title: string,
+  content: string,
+}
+
+const router = useRouter();
+const toPage = (info: essayInter) => {
+  router.push({
+    name: 'policyDetail',
+    params:{
+      id: 1
+    }
+  })
+}
+</script>
+```
++ 接收参数页面
+```
+<template>
+  <div class="contain">
+    <span>{{ $route.params.id }}</span>
+  </div>
+</template>
+
+```
+
+### 4、嵌套路由
 嵌套路由：通过路由实现组件的嵌套展示。
 + 1、声明子路由链接和子路由占位符
 ```

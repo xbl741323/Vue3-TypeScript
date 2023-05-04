@@ -39,7 +39,7 @@ const router = createRouter({
       component: Policy
     },
     {
-      path: '/policyDetail',
+      path: '/policyDetail/:id',
       name: 'policyDetail',
       component: PolicyDetail
     },
