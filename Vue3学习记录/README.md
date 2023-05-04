@@ -545,8 +545,9 @@ const toPage = (info: essayInter) => {
   })
 }
 </script>
-
-// 接收参数
+```
++ 接收参数
+```
 <template>
   <div class="contain">
     <span>{{ route.query.title }}</span>
