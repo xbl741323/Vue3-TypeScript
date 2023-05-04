@@ -475,7 +475,7 @@ shallowRef：只处理基本数据类型的响应式，不进行对象的响应�
 作用：创建一个自定义的ref，并对其依赖项跟踪和更新触发进行显式控制，案例：实现防抖效果
 ```
 
-## 五、Vue3 Router（路由）
+## 五、Vue3 Router（路由）`官网地址：https://router.vuejs.org/zh/`
 + vue-route是vue.js官方给出路由解决方案，只能结合vue项目使用，能够轻松管理SPA项目中的组件切换。
 + 注意版本：vue-router3.x只能结合vue2使用，vue-router4.x只能结合vue3使用，此处介绍的是vue-router4.x版本。
 
@@ -545,7 +545,21 @@ const toPage = (info: essayInter) => {
   })
 }
 </script>
+
+// 接收参数
+<template>
+  <div class="contain">
+    <span>{{ route.query.title }}</span>
+    <span>{{ route.query.content }}</span>
+  </div>
+</template>
+
+<script setup lang='ts'>
+import { useRoute } from 'vue-router'
+const route = useRoute()
+</script>
 ```
+
 + 注意：在模板中我们仍然可以访问 $router 和 $route，所以不需要在 setup 中返回 router 或 route。
 ```
 <template>
