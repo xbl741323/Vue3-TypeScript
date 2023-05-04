@@ -476,8 +476,8 @@ shallowRef：只处理基本数据类型的响应式，不进行对象的响应�
 ```
 
 ## 五、Vue3 Router（路由）
-vue-route是vue.js官方给出路由解决方案，只能结合vue项目使用，能够轻松管理SPA项目中的组件切换。
-注意版本：vue-router3.x只能结合vue2使用，vue-router4.x只能结合vue3使用，此处介绍的是vue-router4.x版本。
++ vue-route是vue.js官方给出路由解决方案，只能结合vue项目使用，能够轻松管理SPA项目中的组件切换。
++ 注意版本：vue-router3.x只能结合vue2使用，vue-router4.x只能结合vue3使用，此处介绍的是vue-router4.x版本。
 
 ### 1、创建路由
 ```
