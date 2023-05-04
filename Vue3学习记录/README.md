@@ -475,7 +475,166 @@ shallowRef：只处理基本数据类型的响应式，不进行对象的响应�
 作用：创建一个自定义的ref，并对其依赖项跟踪和更新触发进行显式控制，案例：实现防抖效果
 ```
 
-## 五、Router（路由）
+## 五、Vue3 Router（路由）
+vue-route是vue.js官方给出路由解决方案，只能结合vue项目使用，能够轻松管理SPA项目中的组件切换。
+注意版本：vue-router3.x只能结合vue2使用，vue-router4.x只能结合vue3使用，此处介绍的是vue-router4.x版本。
+
+### 1、创建路由
+```
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/home/index.vue'
+import Service from '@/views/service/index.vue'
+import Policy from '@/views/policy/index.vue'
+import PolicyDetail from '@/views/policy/detail.vue'
+import Personal from '@/views/personal/index.vue'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/service',
+      name: 'service',
+      component: Service
+    },
+    {
+      path: '/policy',
+      name: 'policy',
+      component: Policy
+    },
+    {
+      path: '/policyDetail',
+      name: 'policyDetail',
+      component: PolicyDetail
+    },
+    {
+      path: '/personal',
+      name: 'personal',
+      component: Personal
+    }
+  ]
+})
+
+export default router
+```
+
+### 2、嵌套路由
+嵌套路由：通过路由实现组件的嵌套展示。
++ 1、声明子路由链接和子路由占位符
+```
+<template>
+  <div class="contain">
+    <div class="tab-contain">
+      <!-- 声明子路由链接 -->
+      <div 
+       @click="changeTab(index)"
+       :class="['tab-item', tabIndex === index ? 'active-tab-item' : '']" 
+       v-for="(item, index) in tabList" 
+       :key="item.path">{{ item.title }}</div>
+      </div>
+     <!-- 声明子路由占位符 -->
+    <RouterView />
+  </div>
+</template>
+
+<script setup lang="ts">
+import {
+  ref,
+  reactive,
+} from 'vue';
+import { RouterView, useRouter } from 'vue-router';
+const router = useRouter()
+const tabIndex = ref<number>(0)
+const tabList = reactive([
+  {
+    title: '服务1',
+    path: '/service/serviceOne'
+  },
+  {
+    title: '服务2',
+    path: '/service/serviceTwo'
+  }
+])
+
+const changeTab = (index:number)=>{
+  tabIndex.value = index
+  toPage(tabList[index].path)
+}
+
+const toPage = (path:string)=>{
+  router.push({
+    path: path
+  })
+}
+
+</script>
+
+<style scoped>
+.contain {
+  padding: 0;
+}
+
+.tab-contain {
+  display: flex;
+  height: 40px;
+  border-bottom: 1px solid #e7e6eb;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.active-tab-item {
+  color: #36a6fe;
+}
+</style>
+```
++ 2、在父路由规则中，通过children属性嵌套声明子路由规则
+```
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/home/index.vue'
+import Service from '@/views/service/index.vue'
+import ServiceOne from '@/views/service/children/service-one.vue'
+import ServiceTwo from '@/views/service/children/service-two.vue'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/service',
+      name: 'service',
+      redirect: '/service/serviceOne', // 嵌套路由的重定向
+      component: Service,
+      // 通过 children 属性嵌套声明子级路由规则
+      // 注意：子路由的path不要以/开头
+      children: [
+        {
+          path: 'serviceOne',
+          component: ServiceOne
+        },
+        {
+          path: 'serviceTwo',
+          component: ServiceTwo
+        }
+      ]
+    }
+  ]
+})
+
+export default router
+```
 
 ## 六、pinia（轻量级的状态管理库）
 

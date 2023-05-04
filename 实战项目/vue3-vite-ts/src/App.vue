@@ -1,5 +1,5 @@
 <template>
-  <Head v-if="router.currentRoute.value.name != 'policyDetail'" :title="title"></Head>
+  <Head v-if="router.currentRoute.value.name == 'policyDetail'" :title="title"></Head>
   <RouterView />
   <tab-bar @changeTitle="changeHeadTitle" ref="tabBar"></tab-bar>
 </template>
