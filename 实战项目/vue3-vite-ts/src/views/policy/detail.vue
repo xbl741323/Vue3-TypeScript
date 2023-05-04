@@ -1,6 +1,6 @@
 <template>
   <div class="contain">
-    <span>{{ $route.params }}</span>
+    <span>{{ $route.query.title }}</span>
     <span>{{ routerInfo.content }}</span>
   </div>
 </template>
@@ -9,7 +9,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { RouterView, useRouter, useRoute } from 'vue-router'
 const router = useRouter()
-// const route = useRoute()
+const route = useRoute()
 
 interface essayInte {
   title: string,
@@ -23,7 +23,7 @@ const essayInfo = reactive<essayInte>({
 })
 
 const routerInfo = router.currentRoute.value.query
-// console.log(route.query,'route中的数据')
+console.log(route.query,'route中的数据')
 
 </script>
 
