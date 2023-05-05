@@ -770,4 +770,89 @@ export default router
 ```
 
 ## 六、pinia（轻量级的状态管理库）
++ Pinia 是 Vue 的存储库，它允许您跨组件/页面共享状态。
++ 与 Vuex 相比，Pinia 提供了一个更简单的 API，具有更少的规范，提供了 Composition-API 风格的 API，最重要的是，在与 TypeScript 一起使用时具有可靠的类型推断支持。
 
+### 1、定义Store
+
++ 常规定义
+```
+import { defineStore } from 'pinia'
+export const useCounterStore = defineStore('counter', {
+  state: () => {
+    return {
+      count: 0
+    }
+  },
+  // 也可以定义为
+  // state: () => ({ count: 0 })
+  getters: {
+    // 自动将返回类型推断为数字
+    doubleCount(state) {
+      return state.count * 2
+    },
+    // 返回类型必须明确设置 可以通过this访问
+    doublePlusOne(): number {
+      return this.count * 2 + 1
+    },
+  },
+  actions: {
+    increment() {
+      this.count++
+    },
+    reduce() {
+      this.count--
+    },
+  },
+})
+```
+
++ 使用函数定义
+```
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  const doubleCount = computed(() => count.value * 2)
+  function increment() {
+    count.value++
+  }
+  function reduce() {
+    count.value--
+  }
+  return { count, doubleCount, increment, reduce }
+})
+
+```
+
+### 2、页面使用
+```
+<template>
+  <div class="contain">
+    <h1>count：{{ counter.count }}</h1>
+    <h1>doubleCount：{{ counter.doubleCount }}</h1>
+    <button @click="countAdd">点我加一</button>
+    <button @click="countReduce">点我减一</button>
+    <button @click="countChange">点我改变</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useCounterStore } from '@/stores/counter'
+const counter = useCounterStore()
+const countAdd = () => {
+  counter.increment()
+}
+const countReduce = () => {
+  counter.reduce()
+}
+// 可以添加逻辑判断修改count值
+const countChange = () => {
+  counter.$patch((state) => {
+    if (state.count < 0) {
+      state.count = 0
+    }
+  })
+}
+</script>
+```
