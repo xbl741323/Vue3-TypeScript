@@ -856,3 +856,26 @@ const countChange = () => {
 }
 </script>
 ```
+
+### 3、解构store
++ state 也可以使用解构，但使用解构会使其失去响应式，这时候可以用 pinia 的 storeToRefs
+```
+<template>
+  <div class="contain">
+    <h1>count：{{ counter.count }}</h1>
+    <button @click="countChange">点我改变</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useCounterStore } from '@/stores/counter'
+import { storeToRefs } from 'pinia';
+const counter = useCounterStore()
+const { count } = storeToRefs(counter)
+const countChange = () => {
+  count.value++
+}
+</script>
+
+<style scoped></style>
+```

@@ -2,7 +2,6 @@
   <div class="contain">
     <h1>count：{{ counter.count }}</h1>
     <h1>doubleCount：{{ counter.doubleCount }}</h1>
-    <h1>doublePlusOne：{{ counter.doublePlusOne }}</h1>
     <button @click="countAdd">点我加一</button>
     <button @click="countReduce">点我减一</button>
     <button @click="countChange">点我改变</button>
