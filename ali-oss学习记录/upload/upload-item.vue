@@ -39,10 +39,13 @@ export default {
       checkpoints: {}, // 所有分片上传文件的检查点
       progress: 0, // 进度条
       uploadStatus: 0, // 上传状态 0-待上传 1-上传中 2-上传完成
+      headers: {
+        "Content-Disposition": "inline",
+      }
     };
   },
   mounted() {
-    console.log('组件创建了！')
+    console.log('组件创建了！',this.file)
     this.startUpload(this.file);
   },
   methods: {
@@ -104,16 +107,13 @@ export default {
         this.initOSSClient();
       }
       const fileName = this.ossUrl + file.name;
-      this.ossClient.multipartUpload(fileName, file.raw, {
+      this.ossClient.multipartUpload(fileName, file.raw?file.raw:file, {
           parallel: this.parallel,
           partSize: this.partSize,
           progress: (progress, checkpoint) => {
             this.onMultipartUploadProgress(progress, checkpoint)
           },
-          headers: {
-            "x-oss-force-download": true,
-            "Content-Disposition": "attachment",
-          },
+          headers: this.headers
         }).then((res) => {
           this.$emit("getReturnInfo", res, this.file);
         }).catch((err) => {
@@ -127,7 +127,7 @@ export default {
       const timegap = 1;
       let status = expiration && this.$moment(expiration).subtract(timegap, "minutes").isBefore(this.$moment());
       if (status) {
-        console.log(`STS token will expire in ${timegap} minutes，uploading will pause and resume after getting new STS token`);
+          console.log(`STS token will expire in ${timegap} minutes，uploading will pause and resume after getting new STS token`);
         if (this.ossClient) {
           this.stop();
         }
@@ -143,13 +143,14 @@ export default {
     // 6、断点续传
     async resumeMultipartUpload() {
       Object.values(this.checkpoints).forEach((checkpoint) => {
-        const { uploadId, file, name } = checkpoint;
-        this.ossClient.multipartUpload(uploadId, file, {
+        const { uploadId, file } = checkpoint;
+        this.ossClient.multipartUpload(uploadId, file.raw, {
             parallel: this.parallel,
             partSize: this.partSize,
             progress: (progress, checkpoint) => {
               this.onMultipartUploadProgress(progress, checkpoint)
             },
+            headers: this.headers,
             checkpoint,
           }).then((res) => {
             this.$emit("getReturnInfo", res, this.file);

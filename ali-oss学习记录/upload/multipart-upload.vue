@@ -1,12 +1,7 @@
 
 <!-- oss普通上传+分片上传demo -->
 <template>
-  <el-dialog
-    title="文件上传"
-    :visible.sync="openVisble"
-    v-if="openVisble"
-    center
-    :width="'600px'"
+  <el-dialog title="文件上传" :visible.sync="openVisble" v-if="openVisble" center :width="'600px'"
     :before-close="handleClose"
     :close-on-click-modal="false">
     <el-form :data="form" ref="form">
@@ -23,17 +18,8 @@
       <div class="upload-item" v-if="uploadFinishStatus">上传完毕 ({{unWaitCount}}/{{ this.fileList.length }})</div>
       <div class="upload-item" v-if="!uploadFinishStatus && fileList.length > 0" @click="confirmTip()">全部取消</div>
     </div>
-    <el-upload
-      action
-      ref="upload"
-      accept="*"
-      :multiple="true"
-      :file-list="fileList"
-      :on-change="handleChange"
-      :auto-upload="false">
-      <el-button type="primary" icon="el-icon-upload">选择本地文件</el-button>
-      <div slot="file"></div>
-    </el-upload>
+    <el-button class="btn-sty" type="primary" @click="handleFile()"><i class="el-icon-upload i-right-sty"></i>选择本地文件</el-button>
+    <input ref="file" type="file" accept=".pdf" multiple class="file-upload" @change="handleChange($event)"/>
     <div v-for="(file) in fileList" :key="file.uid">
       <upload-item ref="upload" @getReturnInfo="submitUpload" @getUploadStatus="getUploadStatus" @deleteFile="deleteFile" :file="file"></upload-item>
     </div>
@@ -50,7 +36,7 @@ export default {
   components: {
     uploadItem,
   },
-  props: ["userData"],
+  props: ["userData","isPerson"],
   data() {
     return {
       fileType: "", // 文件类型（1：营业执照；2：发明专利；3：实用新型专利；4：外观专利；5：商标；6：版权；7：其他知产；8：文件柜材料）
@@ -81,8 +67,7 @@ export default {
       let r2 = this.fileList.filter((item) => {
         return item.uploadStatus === 2;
       });
-      this.uploadFinishStatus =
-        r2.length == this.fileList.length ? true : false;
+      this.uploadFinishStatus = r2.length == this.fileList.length ? true : false;
       this.unWaitCount = this.fileList.length - r1.length;
     },
     // 取消上传，删除文件
@@ -105,6 +90,7 @@ export default {
       this.uploadFinishStatus = false;
       this.unWaitCount = 0;
     },
+    // 取消提示
     confirmTip() {
       this.stopMultiUpload()
       this.$confirm(
@@ -146,11 +132,26 @@ export default {
         });
       }
     },
+    // 触发点击事件
+    handleFile(){
+      this.$refs.file.click()
+    },
     // 上传文件
-    handleChange(file, fileList) {
-      console.log('fileList',fileList)
-      file.uploadStatus = 0; // uploadStatus 上传状态 0-待上传 1-上传中 2-上传完成
-      this.fileList.push(file);
+    handleChange(e) {
+      let r = e.target.files
+      if(r.length>5){
+        this.$message({
+          type:'warning',
+          message:"单次最多上传5个文件！"
+        })
+      }else{
+        r.forEach((item,index)=>{
+          item.uid = this.$moment().valueOf() + String(index)
+          item.uploadStatus = 0; // uploadStatus 上传状态 0-待上传 1-上传中 2-上传完成
+          this.fileList.push(item);
+        })
+        this.$refs.file.value = '' // 解决重复文件不会再次触发change事件的问题
+      }
     },
     // 提交
     submitUpload(info, file) {
@@ -164,7 +165,7 @@ export default {
         fileName: file.name,
         fileSize: file.size,
       };
-      saveIntellectualProperty(params).then((res) => {
+      saveIntellectualProperty(params,this.isPerson).then((res) => {
         if (res.data.code == CodeMsg.CODE_0) {
           this.$emit("refresh");
         }
@@ -197,5 +198,14 @@ export default {
 }
 .bottom-sty {
   margin-bottom: 10px;
+}
+.file-upload{
+  display: none;
+}
+.i-right-sty{
+  margin-right: 4px;
+}
+.btn-sty{
+  margin-bottom: 8px;
 }
 </style>

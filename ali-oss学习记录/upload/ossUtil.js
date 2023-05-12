@@ -6,9 +6,12 @@ let ossClient = null; // oss客户端实例
 const ossUrl = '/user-file/' // 服务器存储地址
 const bucket = 'wotao-com'; // bucket名称
 const region = 'oss-cn-hangzhou'; // oss服务区域名称
-const partSize = 1 * 1024 * 1024; // 每个分片大小(byte) 10M
+const partSize = 100 * 1024 * 1024; // 每个分片大小(byte) 10M
 const parallel = 9999; // 同时上传的分片数
 const checkpoints = {}; // 所有分片上传文件的检查点
+const headers = {
+  "Content-Disposition": "inline",
+};
 
 // 1、获取 STS 凭证，创建 OSS Client
 function getCredential() {
@@ -55,12 +58,8 @@ async function commonUpload(file) {
     await initOSSClient();
   }
   const fileName = ossUrl + file.name;
-  const headers = {
-    "Content-Disposition": "attachment",
-  };
   return ossClient.put(fileName, file.raw, { headers })
 }
-
 // 5、分片上传
 async function multipartUpload(file) {
   if (!ossClient) {
@@ -74,7 +73,8 @@ async function multipartUpload(file) {
       parallel,
       partSize,
       progress: onMultipartUploadProgress,
-    }
+      headers
+    },
   );
 }
 
@@ -86,6 +86,7 @@ async function resumeMultipartUpload() {
       parallel,
       partSize,
       progress: onMultipartUploadProgress,
+      headers,
       checkpoint
     }).then(result => {
       console.log('before delete checkpoints === ', checkpoints);
