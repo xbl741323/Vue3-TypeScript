@@ -118,9 +118,7 @@ async function onMultipartUploadProgress(progress, checkpoint) {
   }
 }
 
-// 8、暂停、续传按钮点击事件
-
-// 暂停上传
+// 8、暂停上传
 function stop() {
   if (ossClient) ossClient.cancel();
 }
