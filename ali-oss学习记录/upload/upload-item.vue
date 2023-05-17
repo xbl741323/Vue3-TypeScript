@@ -5,9 +5,10 @@
       <span class="over-sty">{{ file.name }}</span>
     </div>
     <div class="upload-item">
-      <span v-if="uploadStatus == 0 || uploadStatus == 1" @click="confirmTip(file)">取消上传</span>
+      <el-button type="text" v-if="(uploadStatus == 0 || uploadStatus == 1 || (uploadStatus == 3&&uploadCount == 0))&&(uploadCount == 0)" @click="confirmTip(file)" class="right-sty">取消上传</el-button>
+      <el-button type="text" v-if="uploadStatus == 3&&uploadCount == 0" @click="resetUpload()" v-preventReClick class="right-sty">继续上传</el-button>
       <el-progress
-        v-if="progress > 0 && progress < 100"
+        v-if="progress > 0 && progress < 100 && uploadStatus != 3&& uploadCount == 0"
         :show-text="false"
         class="progress-sty"
         type="circle"
@@ -15,8 +16,10 @@
         :width="20"
         :stroke-width="2">
       </el-progress>
-      <span v-if="uploadStatus == 2">上传成功</span>
-      <i v-if="uploadStatus == 2" class="el-icon-success success-sty"></i>
+      <span v-if="uploadStatus == 2 || uploadCount >=1" class="right-sty">上传成功</span>
+      <i v-if="uploadStatus == 2 || uploadCount >=1" class="el-icon-success success-sty"></i>
+      <span v-if="uploadStatus == 3&&uploadCount == 0" class="right-sty">上传异常</span>
+      <i v-if="uploadStatus == 3&&uploadCount == 0" class="el-icon-warning warning-sty"></i>
     </div>
   </div>
 </template>
@@ -29,6 +32,7 @@ export default {
   props: ["file"],
   data() {
     return {
+      pauseStatus: false, // 暂停状态
       credentials: null, // STS凭证
       ossClient: null, // oss客户端实例
       ossUrl: "/user-file/", // 服务器存储地址
@@ -38,18 +42,25 @@ export default {
       parallel: 99999, // 同时上传的分片数
       checkpoints: {}, // 所有分片上传文件的检查点
       progress: 0, // 进度条
-      uploadStatus: 0, // 上传状态 0-待上传 1-上传中 2-上传完成
+      uploadStatus: 0, // 上传状态 0-待上传 1-上传中 2-上传完成 3-上传异常
+      uploadCount: 0, // 已上传数量-用于控制网络问题引起的重复提交
       headers: {
         "Content-Disposition": "inline",
       }
     };
   },
-  mounted() {
+  created(){
     console.log('组件创建了！',this.file)
     this.startUpload(this.file);
   },
   methods: {
+    // 重新上传
+    resetUpload(){
+      this.pauseStatus = false
+      this.startUpload(this.file);
+    },
     confirmTip(file) {
+      this.pauseStatus = true
       this.stop();
       this.$confirm(
         "确定取消上传？已经上传的部分将保留在文件柜中。",
@@ -60,7 +71,10 @@ export default {
       ).then(() => {
         this.deleteFile(file)
       }).catch(()=>{
-        this.resume()
+        if((this.uploadStatus == 0 || this.uploadStatus == 1)&&(this.uploadCount == 0)){
+          this.pauseStatus = false
+          this.resume()
+         }
       })
     },
     // 删除当前文件
@@ -98,7 +112,9 @@ export default {
           this.credentials = res.data.data.body.credentials;
         }
       });
-      this.multipartUpload(file);
+      if(!this.pauseStatus){
+        this.multipartUpload(file);
+      }
     },
 
     // 4、分片上传
@@ -115,9 +131,15 @@ export default {
           },
           headers: this.headers
         }).then((res) => {
-          this.$emit("getReturnInfo", res, this.file);
+          if(this.uploadCount==0){
+              this.uploadCount++
+              this.$emit("getReturnInfo", res, this.file);
+           }
         }).catch((err) => {
           console.log("multipart upload failed === ", err);
+          if(!(err&&(err.status == 0))&&(this.uploadStatus!=2)&&(this.uploadCount<=1)){
+            this.uploadStatus = 3
+          }
         });
     },
 
@@ -127,10 +149,8 @@ export default {
       const timegap = 1;
       let status = expiration && this.$moment(expiration).subtract(timegap, "minutes").isBefore(this.$moment());
       if (status) {
-          console.log(`STS token will expire in ${timegap} minutes，uploading will pause and resume after getting new STS token`);
-        if (this.ossClient) {
-          this.stop();
-        }
+        console.log(`STS token will expire in ${timegap} minutes，uploading will pause and resume after getting new STS token`);
+        this.stop();
         await this.getCredential().then((res) => {
           if (res.data.code == CodeMsg.CODE_0) {
             this.credentials = res.data.data.body.credentials;
@@ -153,21 +173,31 @@ export default {
             headers: this.headers,
             checkpoint,
           }).then((res) => {
-            this.$emit("getReturnInfo", res, this.file);
+            if(this.uploadCount==0){
+              this.uploadCount++
+              this.$emit("getReturnInfo", res, this.file);
+           }
           }).catch((err) => {
             console.log("Resume multipart upload failed === ", err);
+            if(!(err&&(err.status == 0))&&(this.uploadStatus!=2)&&(this.uploadCount<=1)){
+              this.uploadStatus = 3
+            }
           });
       });
     },
 
     // 7、分片上传进度改变回调
     onMultipartUploadProgress(progress, checkpoint){
-      console.log(progress, "输出上传进度");
-      this.checkpoints[checkpoint.uploadId] = checkpoint;
-      this.checkToken();
-      this.progress = progress * 100;
-      this.uploadStatus = progress == 0 ? 0 : progress == 1 ? 2 : 1;
-      this.$emit("getUploadStatus", this.uploadStatus, this.file);
+      if((this.uploadCount == 0)&&(this.uploadStatus!=2)){
+        console.log(progress, "输出上传进度");
+        if(checkpoint&&checkpoint.uploadId){
+          this.checkpoints[checkpoint.uploadId] = checkpoint;
+        }
+        this.checkToken();
+        this.progress = progress * 100;
+        this.uploadStatus = progress == 0 ? 0 : progress == 1 ? 2 : 1;
+        this.$emit("getUploadStatus", this.uploadStatus, this.uploadCount, this.file);
+      }
     },
 
     // 8、暂停上传
@@ -181,6 +211,8 @@ export default {
     resume() {
       if (this.ossClient){
         this.resumeMultipartUpload();
+      }else{
+        this.startUpload(this.file);
       }
     }
   },
@@ -195,7 +227,7 @@ export default {
   margin-bottom: 10px;
 }
 .upload-item:nth-of-type(1) {
-  flex: 3.5;
+  flex: 1.4;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -203,10 +235,9 @@ export default {
 .upload-item:nth-of-type(2) {
   flex: 1;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  color: #409eff;
-  cursor: pointer;
+  color: #333333;
 }
 .progress-sty {
   display: inline !important;
@@ -215,11 +246,21 @@ export default {
 }
 .success-sty {
   color: #67c23a;
+  font-size: 16px;
+}
+.warning-sty{
+  color: #E6A23C;
+  font-size: 16px;
 }
 .over-sty {
-  width: 400px;
+  width: 320px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.right-sty{
+  margin-right: 10px;
+  font-size: 14px;
+  padding: 0 0;
 }
 </style>

@@ -51,10 +51,11 @@ export default {
   },
   methods: {
     // uploadStatus赋值
-    getUploadStatus(uploadStatus, file) {
+    getUploadStatus(uploadStatus, uploadCount, file) {
       this.fileList.forEach((item) => {
         if (item.uid == file.uid) {
           item.uploadStatus = uploadStatus;
+          item.uploadCount = uploadCount;
         }
       });
       this.setAllStatus();
@@ -62,10 +63,10 @@ export default {
     // 设置状态值
     setAllStatus() {
       let r1 = this.fileList.filter((item) => {
-        return item.uploadStatus === 0;
+        return item.uploadStatus === 0&&item.uploadCount === 0;
       });
       let r2 = this.fileList.filter((item) => {
-        return item.uploadStatus === 2;
+        return item.uploadStatus === 2 || item.uploadCount >= 1;
       });
       this.uploadFinishStatus = r2.length == this.fileList.length ? true : false;
       this.unWaitCount = this.fileList.length - r1.length;
@@ -115,8 +116,10 @@ export default {
     // 批量暂停上传
     stopMultiUpload(){
       if (this.$refs["upload"] && this.$refs["upload"].length > 0) {
+        console.log(this.$refs["upload"],'this.$refs["upload"]')
         this.$refs["upload"].forEach((item) => {
           if (item.uploadStatus === 0 || item.uploadStatus === 1) {
+            item.pauseStatus = true
             item.stop();
           }
         });
@@ -125,8 +128,10 @@ export default {
     // 批量续传
     startMultiUpload(){
       if (this.$refs["upload"] && this.$refs["upload"].length > 0) {
+        console.log(this.$refs["upload"],'this.$refs["upload"]')
         this.$refs["upload"].forEach((item) => {
-          if (item.uploadStatus === 0 || item.uploadStatus === 1) {
+          if ((item.uploadStatus === 0 || item.uploadStatus === 1)&&(item.uploadCount == 0)) {
+            item.pauseStatus = false
             item.resume();
           }
         });
@@ -147,7 +152,8 @@ export default {
       }else{
         r.forEach((item,index)=>{
           item.uid = this.$moment().valueOf() + String(index)
-          item.uploadStatus = 0; // uploadStatus 上传状态 0-待上传 1-上传中 2-上传完成
+          item.uploadStatus = 0; // uploadStatus 上传状态 0-待上传 1-上传中 2-上传完成 3-上传异常
+          item.uploadCount = 0; // 已上传数量-用于控制网络问题引起的重复提交
           this.fileList.push(item);
         })
         this.$refs.file.value = '' // 解决重复文件不会再次触发change事件的问题
