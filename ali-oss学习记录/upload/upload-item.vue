@@ -29,7 +29,16 @@ import * as CodeMsg from "@/api/common/CodeChange";
 import { OSS } from "./ossUtil";
 import { getFileRepositorySts } from "@/api/oss/upload";
 export default {
-  props: ["file"],
+  props: {
+    file:{
+      require: true
+    },
+    partNum:{ // 分割分片大小数-上传小文件传2-控制进度条完整显示
+      type: Number,
+      require: false,
+      default: 1
+    }
+  },
   data() {
     return {
       pauseStatus: false, // 暂停状态
@@ -38,8 +47,8 @@ export default {
       ossUrl: "/user-file/", // 服务器存储地址
       bucket: "wotao-com", // bucket名称
       region: "oss-cn-hangzhou", // oss服务区域名称
-      partSize: 1 * 1024 * 1024, // 每个分片大小(byte) 1M
-      parallel: 99999, // 同时上传的分片数
+      partSize: 2 * 1024 * 1024, // 每个分片大小(byte) 2M
+      parallel: 999, // 同时上传的分片数
       checkpoints: {}, // 所有分片上传文件的检查点
       progress: 0, // 进度条
       uploadStatus: 0, // 上传状态 0-待上传 1-上传中 2-上传完成 3-上传异常
@@ -102,6 +111,7 @@ export default {
         stsToken: securityToken,
         bucket: this.bucket,
         region: this.region,
+        timeout: 60 * 60 * 1000
       });
     },
 
@@ -125,7 +135,7 @@ export default {
       const fileName = this.ossUrl + file.name;
       this.ossClient.multipartUpload(fileName, file.raw?file.raw:file, {
           parallel: this.parallel,
-          partSize: this.partSize,
+          partSize: this.partSize/this.partNum,
           progress: (progress, checkpoint) => {
             this.onMultipartUploadProgress(progress, checkpoint)
           },
@@ -166,7 +176,7 @@ export default {
         const { uploadId, file } = checkpoint;
         this.ossClient.multipartUpload(uploadId, file.raw, {
             parallel: this.parallel,
-            partSize: this.partSize,
+            partSize: this.partSize/this.partNum,
             progress: (progress, checkpoint) => {
               this.onMultipartUploadProgress(progress, checkpoint)
             },

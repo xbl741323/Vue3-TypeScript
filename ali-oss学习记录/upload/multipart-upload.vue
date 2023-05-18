@@ -21,7 +21,7 @@
     <el-button class="btn-sty" type="primary" @click="handleFile()"><i class="el-icon-upload i-right-sty"></i>选择本地文件</el-button>
     <input ref="file" type="file" accept=".pdf" multiple class="file-upload" @change="handleChange($event)"/>
     <div v-for="(file) in fileList" :key="file.uid">
-      <upload-item ref="upload" @getReturnInfo="submitUpload" @getUploadStatus="getUploadStatus" @deleteFile="deleteFile" :file="file"></upload-item>
+      <upload-item ref="upload" @getReturnInfo="submitUpload" @getUploadStatus="getUploadStatus" @deleteFile="deleteFile" :file="file" :partNum='2'></upload-item>
     </div>
     <!-- 按钮区域 -->
     <div class="btn-contain"></div>
