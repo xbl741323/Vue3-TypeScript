@@ -117,6 +117,37 @@ a.name = '甘雨'
 3、reactive定义的响应式数据是"深层次的"
 ```
 
++ 补充数组相关
+```
+interface info {
+  id: number,
+  title: string
+}
+interface dataInfoFace {
+  title: string, dataList: info[]
+}
+// 用ref定义规范数组
+const dataList = ref<info[]>([])
+// 用reactive定义对象中的规范数组
+const dataInfo = reactive<dataInfoFace>({
+  title: '',
+  dataList: []
+})
+
+const getList = () => {
+  let params = {
+    substationId: 20
+  }
+  // 用res:any解决code找不到的问题
+  getListColumn(params).then((res: any) => {
+    if (res.code == 0) {
+      dataList.value = res.data
+      dataInfo.dataList = res.data
+    }
+  })
+}
+```
+
 ### 3、计算属性
 ```
 功能：与Vue2.x中computed配置功能一致
