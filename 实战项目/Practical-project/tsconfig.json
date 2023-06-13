@@ -1,0 +1,33 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "compilerOptions": {
+    "target": "esnext", // 用来指定编译后的js版本
+    "module": "esnext", // 用来指定使用的模块化的规范
+    "lib": [ // 用来指定项目中TS需要引用的库
+      "esnext",
+      "dom"
+    ],
+    "strict": true, // 开启所有严格的类型检查
+    "outDir": "./dist", // 用于打包的指定位置
+    "types": [ // 加载的声明文件包
+      "element-plus/global"
+    ],
+    "ignoreDeprecations": "5.0",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
