@@ -1,0 +1,51 @@
+{
+  "id": "3295785",
+  "name": "垃圾清运",
+  "font_family": "zhhw",
+  "css_prefix_text": "icon-zhhw-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2860934",
+      "name": "垃圾点",
+      "font_class": "dustbinpoint",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "2959122",
+      "name": "转运站",
+      "font_class": "transferstation",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "4138833",
+      "name": "企事业单位",
+      "font_class": "institution",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
+      "icon_id": "22236036",
+      "name": "部门",
+      "font_class": "org",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "3204911",
+      "name": "垃圾桶",
+      "font_class": "dustbin",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "18170925",
+      "name": "商铺",
+      "font_class": "shop",
+      "unicode": "e9ec",
+      "unicode_decimal": 59884
+    }
+  ]
+}
