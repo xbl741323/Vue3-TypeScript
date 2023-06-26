@@ -1,15 +1,17 @@
+<!-- 垃圾收运管理 -->
 <template>
   <el-card shadow="never" class="aui-card--fill">
     <div class="mod-worktarget__twgtworktargetcommonarea">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-        <el-form-item label="环卫设施类型" v-if="showWorktargetType">
-          <worktarget-type-select v-model="dataForm.worktargetTypeId" @changeWorktargetType="changeWorktargetType"></worktarget-type-select>
+        <el-form-item label="环卫收运类型" v-if="showWorktargetType">
+          <worktarget-type-select v-model="dataForm.worktargetTypeId"
+            @changeWorktargetType="changeWorktargetType"></worktarget-type-select>
         </el-form-item>
         <el-form-item label="部门" prop="orgId">
           <dept-tree v-model="dataForm.orgId" @change="changeOrg" placeholder="请选择"></dept-tree>
         </el-form-item>
         <el-form-item label="名称">
-          <el-input v-model="dataForm.name" ></el-input>
+          <el-input v-model="dataForm.name"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
@@ -18,17 +20,21 @@
           <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
+          <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:save')" type="primary"
+            @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:delete')" type="danger" @click="deleteHandle()">{{ $t('deleteBatch') }}</el-button>
+          <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:delete')" type="danger"
+            @click="deleteHandle()">{{ $t('deleteBatch') }}</el-button>
         </el-form-item>
       </el-form>
       <div class="table-container" :style="[{ width: foldStatus ? '60%' : '0px' }]">
-        <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;" @row-click="onRowClick">
+        <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle"
+          style="width: 100%;" @row-click="onRowClick">
           <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
           <el-table-column prop="name" label="名称" header-align="center" align="center"></el-table-column>
-          <el-table-column prop="worktargetTypeName" label="设施类型" v-if="showWorktargetType" header-align="center" align="center"></el-table-column>
+          <el-table-column prop="worktargetTypeName" label="设施类型" v-if="showWorktargetType" header-align="center"
+            align="center"></el-table-column>
           <el-table-column prop="address" label="地址" header-align="center" align="center"></el-table-column>
           <el-table-column prop="area" label="面积" header-align="center" align="center"></el-table-column>
           <el-table-column prop="orgName" label="所属部门" header-align="center" align="center"></el-table-column>
@@ -37,24 +43,20 @@
           <el-table-column prop="contactTel" label="联系人电话" header-align="center" align="center"></el-table-column>
           <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
             <template slot-scope="scope">
-              <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
-              <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
+              <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:update')" type="text" size="small"
+                @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
+              <el-button v-if="$hasPermission('worktarget:twgtworktargetcommonarea:delete')" type="text" size="small"
+                @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          v-show="foldStatus"
-          :current-page="page"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="limit"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="pageSizeChangeHandle"
+        <el-pagination v-show="foldStatus" :current-page="page" :page-sizes="[10, 20, 50, 100]" :page-size="limit"
+          :total="total" layout="total, sizes, prev, pager, next, jumper" @size-change="pageSizeChangeHandle"
           @current-change="pageCurrentChangeHandle">
         </el-pagination>
         <div class="fold_btn">
-            <i v-show="!foldStatus" class="el-icon-d-arrow-right" @click="clickFold" />
-            <i v-show="foldStatus" class="el-icon-d-arrow-left" @click="clickFold" />
+          <i v-show="!foldStatus" class="el-icon-d-arrow-right" @click="clickFold" />
+          <i v-show="foldStatus" class="el-icon-d-arrow-left" @click="clickFold" />
         </div>
       </div>
       <div class="map" id="commonarea-container" :style="[{ width: foldStatus ? '40%' : '100%' }]">
@@ -71,7 +73,7 @@ import AddOrUpdate from './twgtworktargetcommonarea-add-or-update'
 import AMap from 'AMap'
 export default {
   mixins: [mixinViewModule],
-  data () {
+  data() {
     return {
       foldStatus: true,
       amap: {},
@@ -82,9 +84,9 @@ export default {
         plugin: {
         },
         events: {
-          init () {
+          init() {
           },
-          click (e) {
+          click(e) {
           }
         }
       },
@@ -107,7 +109,7 @@ export default {
     }
   },
   watch: {
-    polygonList (val) {
+    polygonList(val) {
       this.amap.clearMap()
       if (this.polygonList && this.polygonList.length > 0) {
         for (var i = 0; i < this.polygonList.length; i++) {
@@ -127,7 +129,7 @@ export default {
   components: {
     AddOrUpdate
   },
-  mounted () {
+  mounted() {
     this.initMap()
     if (this.$route.meta.cusParams && this.$route.meta.cusParams.worktargetTypeId) {
       this.worktargetTypeId = this.$route.meta.cusParams.worktargetTypeId
@@ -139,28 +141,28 @@ export default {
           }
           this.worktargetType = res.data
           this.worktargetTypeName = this.worktargetType.worktargetTypeName
-        }).catch(() => {})
+        }).catch(() => { })
       }
     }
   },
-  destroyed () {
+  destroyed() {
     if (this.amap) {
       this.amap.destroy()
     }
   },
   computed: {
-    showWorktargetType () {
+    showWorktargetType() {
       return !this.worktargetTypeId
     }
   },
   methods: {
-    initMap () {
+    initMap() {
       var amap = new AMap.Map('commonarea-container', {
         ...this.mapConfig
       })
       this.amap = amap
     },
-    query () {
+    query() {
       this.dataListLoading = true
       this.$http.get(
         this.mixinViewModuleOptions.getDataListURL,
@@ -200,35 +202,35 @@ export default {
         this.polygonList = polygonList
         if (this.map.polygonList.length > 0) {
           this.map.zoom = 14
-          this.map.center = [ this.map.polygonList[0].geoCenter.lng, this.map.polygonList[0].geoCenter.lat ]
+          this.map.center = [this.map.polygonList[0].geoCenter.lng, this.map.polygonList[0].geoCenter.lat]
         }
       }).catch(() => {
         this.dataListLoading = false
       })
     },
     // #region 地图
-    clickFold () {
+    clickFold() {
       if (this.foldStatus) {
         this.foldStatus = false
       } else {
         this.foldStatus = true
       }
     },
-    onRowClick (row, column, event) {
+    onRowClick(row, column, event) {
       var polygon = this.polygonMap.get(row.id)
       this.amap.setFitView([polygon])
       // this.amap.setZoomAndCenter(this.mapConfig.zoom, [row.geoCenter.lng, row.geoCenter.lat])
       this.activeId = row.id
       this.activeShow(row.id)
     },
-    unActiveShow () {
+    unActiveShow() {
       if (this.activePolygon) {
         var activeOptions = this.activePolygon.getOptions()
         activeOptions.fillColor = 'blue'
         this.activePolygon.setOptions(activeOptions)
       }
     },
-    activeShow (polygonId) {
+    activeShow(polygonId) {
       this.unActiveShow()
       var polygon = this.polygonMap.get(polygonId)
       if (polygon != null) {
@@ -238,20 +240,11 @@ export default {
         this.activePolygon = polygon
       }
     },
-    polygonClickCallback (e) {
+    polygonClickCallback(e) {
       let polygon = e.target.getExtData()
       this.openWindowInfo(polygon)
     },
-    openWindowInfo (polygon) {
-      // var info = []
-      // info.push('<p>名称：' + polygon.name + '</p>')
-      // info.push('<p>处理能力：' + polygon.designCapability + '</p>')
-      // info.push('<p>处置方式：' + polygon.handleModeName + '</p>')
-      // info.push('<p>年处置量：' + polygon.annualHandleAmount + '</p>')
-      // info.push('<p>地址：' + polygon.address + '</p>')
-      // var infoWindow = new AMap.InfoWindow({
-      //   content: info.join('') // 使用默认信息窗体框样式，显示信息内容
-      // })
+    openWindowInfo(polygon) {
       var info = []
       info.push('<div class="info-content"><table style="width: 100%">')
       info.push('<tr><td class="info-content-key">名称：</td><td class="info-content-value">' + polygon.name + '</td></tr>')
@@ -266,13 +259,13 @@ export default {
 
       infoWindow.open(this.amap, [polygon.geoCenter.lng, polygon.geoCenter.lat])
     },
-    changeOrg (org) {
+    changeOrg(org) {
       this.dataForm.orgId = org.id
     },
-    changeWorktargetType (worktargetType) {
+    changeWorktargetType(worktargetType) {
       this.dataForm.worktargetTypeId = worktargetType.id
     },
-    addOrUpdateHandle (id) {
+    addOrUpdateHandle(id) {
       this.addOrUpdateVisible = true
       this.$nextTick(() => {
         this.$refs.addOrUpdate.dataForm.id = id
@@ -282,7 +275,7 @@ export default {
         this.$refs.addOrUpdate.init()
       })
     },
-    createInfoWindow (title, content) {
+    createInfoWindow(title, content) {
       var info = document.createElement('div')
       info.className = 'custom-info input-card content-window-card'
 
@@ -322,7 +315,7 @@ export default {
     },
 
     // 关闭信息窗体
-    closeInfoWindow () {
+    closeInfoWindow() {
       this.amap.clearInfoWindow()
     }
   }
@@ -349,59 +342,62 @@ export default {
     cursor: pointer;
     margin-top: -50px;
     text-align: center;
+
     i {
       font-size: 18px;
       line-height: 100px;
     }
   }
 }
+
 .map {
   float: left;
   width: 40%;
-  height: calc( 100vh - 195px); //
+  height: calc(100vh - 195px); //
 }
 
 .content-window-card {
-    position: relative;
-    box-shadow: none;
-    bottom: 0;
-    left: 0;
-    width: auto;
-    padding: 0;
+  position: relative;
+  box-shadow: none;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  padding: 0;
 }
 
 .content-window-card p {
-    height: 2rem;
+  height: 2rem;
 }
 
 .custom-info {
-    border: solid 1px silver;
+  border: solid 1px silver;
 }
 
 div.info-top {
-    position: relative;
-    background: none repeat scroll 0 0 #F9F9F9;
-    border-bottom: 1px solid #CCC;
-    border-radius: 5px 5px 0 0;
+  position: relative;
+  background: none repeat scroll 0 0 #F9F9F9;
+  border-bottom: 1px solid #CCC;
+  border-radius: 5px 5px 0 0;
 }
 
 div.info-top div {
-    display: inline-block;
-    color: #333333;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 31px;
-    padding: 0 10px;
+  display: inline-block;
+  color: #333333;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 31px;
+  padding: 0 10px;
 }
+
 div.info-top img {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    transition-duration: 0.25s;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transition-duration: 0.25s;
 }
 
 div.info-top img:hover {
-    box-shadow: 0px 0px 5px #000;
+  box-shadow: 0px 0px 5px #000;
 }
 
 .info-content {
@@ -414,5 +410,4 @@ div.info-top img:hover {
 
 .info-content-value {
   width: 65%;
-}
-</style>
+}</style>

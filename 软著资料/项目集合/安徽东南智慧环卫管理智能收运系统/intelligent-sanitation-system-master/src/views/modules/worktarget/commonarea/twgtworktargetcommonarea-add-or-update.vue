@@ -1,21 +1,24 @@
+<!-- GPS定位管理 -->
 <template>
-  <el-dialog width="80%" :visible.sync="visible" :title="worktargetTypeName + (!dataForm.id ? $t('add') : $t('update'))" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog width="80%" :visible.sync="visible" :title="worktargetTypeName + (!dataForm.id ? $t('add') : $t('update'))"
+    :close-on-click-modal="false" :close-on-press-escape="false">
     <div class="commonarea-edit-mian">
       <div class="commonarea-form-container">
-        <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" :label-width="$i18n.locale === 'en-US' ? '120px' : '80px'">
+        <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()"
+          :label-width="$i18n.locale === 'en-US' ? '120px' : '80px'">
           <el-row>
-              <el-col :span="12">
-                <el-form-item label="名称" prop="name">
-                  <el-input v-model="dataForm.name" placeholder="名称"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="面积" prop="area">
-                  <el-input :readonly="true" v-model="dataForm.area" placeholder="面积">
-                    <template slot="append" v-if="areaUnit != ''">{{areaUnit}}</template>
-                  </el-input>
-                </el-form-item>
-              </el-col>
+            <el-col :span="12">
+              <el-form-item label="名称" prop="name">
+                <el-input v-model="dataForm.name" placeholder="名称"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="面积" prop="area">
+                <el-input :readonly="true" v-model="dataForm.area" placeholder="面积">
+                  <template slot="append" v-if="areaUnit != ''">{{ areaUnit }}</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
@@ -57,14 +60,14 @@
         </el-form>
       </div>
       <div class="commonarea-form-map">
-          <div id="commonarea-edit-container" class="commonarea-edit-map">
-            <div class="text-btn">
-              <el-button v-show="!dragging" type="primary" size="small" @click="openDraw">
-                开启定位
-              </el-button>
-              <el-button v-show="dragging" type="primary" size="small" @click="closeDraw">
-                关闭定位
-              </el-button>
+        <div id="commonarea-edit-container" class="commonarea-edit-map">
+          <div class="text-btn">
+            <el-button v-show="!dragging" type="primary" size="small" @click="openDraw">
+              开启定位
+            </el-button>
+            <el-button v-show="dragging" type="primary" size="small" @click="closeDraw">
+              关闭定位
+            </el-button>
           </div>
         </div>
       </div>
@@ -76,7 +79,7 @@
 import debounce from 'lodash/debounce'
 import AMap from 'AMap'
 export default {
-  data () {
+  data() {
     let self = this
     return {
       visible: false,
@@ -115,16 +118,16 @@ export default {
         plugin: {
         },
         events: {
-          init () {
+          init() {
           },
-          click (e) {
+          click(e) {
           }
         }
       }
     }
   },
   computed: {
-    dataRule () {
+    dataRule() {
       return {
         worktargetTypeId: [{ required: true, message: this.$t('validate.required'), trigger: 'blur,change' }],
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -134,7 +137,7 @@ export default {
     }
   },
   methods: {
-    initMap () {
+    initMap() {
       var editAmap = new AMap.Map('commonarea-edit-container', {
         ...this.mapConfig
       })
@@ -142,7 +145,7 @@ export default {
       this.editAmap = editAmap
       this.createPolyEditor(editAmap)
     },
-    init () {
+    init() {
       this.visible = true
       this.$nextTick(() => {
         this.initMap()
@@ -152,7 +155,7 @@ export default {
         }
       })
     },
-    createPolyEditor (editAmap) {
+    createPolyEditor(editAmap) {
       this.polyEditor = new AMap.PolygonEditor(editAmap)
       let self = this
       this.polyEditor.on('add', function (data) {
@@ -168,7 +171,7 @@ export default {
       })
     },
     // 获取信息
-    getInfo () {
+    getInfo() {
       this.$http.get('/worktarget/twgtworktargetcommonarea/' + this.dataForm.id).then(({ data: res }) => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
@@ -189,12 +192,12 @@ export default {
         }
         this.polygon = this.createPolygon(this.polygonObj)
         this.editAmap.setFitView([this.polygon])
-      }).catch(() => {})
+      }).catch(() => { })
     },
-    changeOrg (org) {
+    changeOrg(org) {
       this.dataForm.orgId = org.id
     },
-    getGeoInfo (polygonObj) {
+    getGeoInfo(polygonObj) {
       var path = polygonObj.path
       var geoinfo = ''
       for (var i = 0; i < path.length; i++) {
@@ -203,7 +206,7 @@ export default {
       }
       return geoinfo
     },
-    createPolygon (polygonObj) {
+    createPolygon(polygonObj) {
       var polygon = new AMap.Polygon({
         map: this.editAmap,
         path: polygonObj.path,
@@ -212,7 +215,7 @@ export default {
       })
       return polygon
     },
-    openDraw () {
+    openDraw() {
       this.dragging = !this.dragging
       this.polyEditor.close()
       if (this.polygonObj.path && this.polygonObj.path.length >= 3) {
@@ -223,7 +226,7 @@ export default {
 
       this.polyEditor.open()
     },
-    closeDraw () {
+    closeDraw() {
       this.dragging = false
       var polygon = this.polyEditor.getTarget()
       this.polygonObj.path = polygon.getPath()
@@ -242,11 +245,11 @@ export default {
       this.drawPolygon(this.polygonObj)
       this.polyEditor.close()
     },
-    drawPolygon (polygonObj) {
+    drawPolygon(polygonObj) {
       this.polygon = this.createPolygon(polygonObj)
       this.editAmap.add(this.polygon)
     },
-    onSearchResult (pois) {
+    onSearchResult(pois) {
       if (pois.length > 0) {
         this.$nextTick(() => {
           this.$refs.searchBox.keyword = pois[0].name
@@ -255,7 +258,7 @@ export default {
       // 这边类似模糊查询 会返回一个数组，我就直接取第一个值了。
       this.map.center = [pois[0].lng, pois[0].lat]
     },
-    onDialogClose () {
+    onDialogClose() {
       if (this.editAmap) {
         this.editAmap.destroy()
         this.editAmap = ''
@@ -288,7 +291,7 @@ export default {
               this.$emit('refreshDataList')
             }
           })
-        }).catch(() => {})
+        }).catch(() => { })
       })
     }, 1000, { 'leading': true, 'trailing': false })
   }
@@ -300,70 +303,82 @@ export default {
   width: 100%;
   display: inline-flex;
 }
+
 .commonarea-form-container {
   background-color: white;
   width: 60%;
   display: table-cell;
   padding: 0px 30px 0px 0px;
+
   .position {
     .el-input {
       width: 80%;
     }
+
     @media screen and (max-width: 1680px) {
       .el-input {
         width: 70%;
       }
     }
+
     @media screen and (max-width: 1366px) {
       .el-input {
         width: 52%;
       }
     }
   }
+
   .manager {
     .el-input {
       width: 88%;
     }
+
     @media screen and (max-width: 1680px) {
       .el-input {
         width: 80%;
       }
     }
+
     .el-button {
       position: absolute;
       right: 0;
     }
   }
 }
+
 .commonarea-form-map {
   width: 40%;
   height: 100%;
   display: table-cell;
+
   .text-btn {
-      position: absolute;
-      top: 10px;
-      right: 0;
-      left: 10px;
-      float: left;
-      z-index: 10;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    left: 10px;
+    float: left;
+    z-index: 10;
   }
 }
+
 .dept-list {
+
   .el-input__inner,
   .el-input__suffix {
     cursor: pointer;
   }
 }
+
 .commonarea-edit-map {
   width: 100%;
   height: 65vh;
+
   .text-btn {
-      position: absolute;
-      top: 10px;
-      right: 0;
-      left: 10px;
-      float: left;
-      z-index: 10;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    left: 10px;
+    float: left;
+    z-index: 10;
   }
-}
-</style>
+}</style>

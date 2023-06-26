@@ -1,3 +1,4 @@
+<!-- 视频监控管理 -->
 <template>
   <div class="foot">
     <div id="video" class="foot one">
@@ -20,7 +21,7 @@
           <div class="frame" @click="playerNum(6)">
             <icon class="el-icon-menu"></icon>
             <span class="frameFont">六画面</span>
-          </div><br/><br/>
+          </div><br /><br />
           <div class="frame" @click="playerNum(9)">
             <icon class="el-icon-menu"></icon>
             <span class="frameFont">九画面</span>
@@ -34,53 +35,48 @@
 
       <div style="height: 80%;">
         <div class="title" style="height: 100%;">
-          <span>设备信息</span><br/>
-          <el-input
-              style="margin-top: 10px;"
-              placeholder="输入关键字进行过滤"
-              v-model="filterText">
+          <span>设备信息</span><br />
+          <el-input style="margin-top: 10px;" placeholder="输入关键字进行过滤" v-model="filterText">
           </el-input>
 
-          <el-tree
-              class="filter-tree"
-              :data="data"
-              :props="defaultProps"
-              style="height: 68vh;overflow: auto;"
-              :filter-node-method="filterNode"
-              ref="tree">
+          <el-tree class="filter-tree" :data="data" :props="defaultProps" style="height: 68vh;overflow: auto;"
+            :filter-node-method="filterNode" ref="tree">
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span v-if="data.nodeType=='detailtype'">
+              <span v-if="data.nodeType == 'detailtype'">
                 <i class="el-icon-notebook-2" style="color: gray;"></i>
                 <span style="color: gray;">{{ node.label }}</span>
               </span>
-              <span v-else-if="data.nodeType=='device'" style="color: gray;" @click="clickVideo(data.obj,data.status)">
+              <span v-else-if="data.nodeType == 'device'" style="color: gray;" @click="clickVideo(data.obj, data.status)">
                 <i class="el-icon-video-camera"></i>
                 <span style="color: gray;">{{ node.label }}</span>
               </span>
-              <span v-else-if="data.nodeType=='lastobject' && data.status=='1'" style="color: green;" >
+              <span v-else-if="data.nodeType == 'lastobject' && data.status == '1'" style="color: green;">
                 <i class="el-icon-truck" style="color: green;"></i>
                 <span style="color: green;">{{ node.label }}</span>&nbsp;
-                <el-tooltip v-if="openOnClose==data.obj.videodeviceids" class="item" effect="dark" content="一键关闭" placement="right-start">
+                <el-tooltip v-if="openOnClose == data.obj.videodeviceids" class="item" effect="dark" content="一键关闭"
+                  placement="right-start">
                   <i class="el-icon-video-pause" @click="clickCloseVideo(data.obj)"></i>
                 </el-tooltip>
                 <el-tooltip v-else class="item" effect="dark" content="播放所有视频" placement="right-start">
                   <i class="el-icon-video-play" @click="clickAllVideo(data.obj)"></i>
                 </el-tooltip>
               </span>
-              <span v-else-if="data.nodeType=='lastobject' && data.status=='2'" style="color: #eab31e;" >
+              <span v-else-if="data.nodeType == 'lastobject' && data.status == '2'" style="color: #eab31e;">
                 <i class="el-icon-truck" style="color: #eab31e;"></i>
                 <span style="color: #eab31e;">{{ node.label }}</span>&nbsp;
-                <el-tooltip v-if="openOnClose==data.obj.videodeviceids" class="item" effect="dark" content="一键关闭" placement="right-start">
+                <el-tooltip v-if="openOnClose == data.obj.videodeviceids" class="item" effect="dark" content="一键关闭"
+                  placement="right-start">
                   <i class="el-icon-video-pause" @click="clickCloseVideo(data.obj)"></i>
                 </el-tooltip>
                 <el-tooltip v-else class="item" effect="dark" content="播放所有视频" placement="right-start">
                   <i class="el-icon-video-play" @click="clickAllVideo(data.obj)"></i>
                 </el-tooltip>
               </span>
-              <span v-else style="color: gray;" >
+              <span v-else style="color: gray;">
                 <i class="el-icon-truck" style="color: gray;"></i>
                 <span style="color: gray;">{{ node.label }}</span>&nbsp;
-                <el-tooltip v-if="openOnClose==data.obj.videodeviceids" class="item" effect="dark" content="一键关闭" placement="right-start">
+                <el-tooltip v-if="openOnClose == data.obj.videodeviceids" class="item" effect="dark" content="一键关闭"
+                  placement="right-start">
                   <i class="el-icon-video-pause" @click="clickCloseVideo(data.obj)"></i>
                 </el-tooltip>
                 <el-tooltip v-else class="item" effect="dark" content="播放所有视频" placement="right-start">
@@ -107,13 +103,13 @@ export default {
   name: "videomonitoring",
   data() {
     return {
-      filterText:'',
+      filterText: '',
       data: [],
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      openOnClose:''
+      openOnClose: ''
     };
   },
   watch: {
@@ -122,15 +118,11 @@ export default {
     }
   },
   mounted() {
-    // const s = document.createElement('script');
-    // s.type = 'text/javascript';
-    // s.src = 'https://v.car900.com/api/byskplayer.js';
-    // document.body.appendChild(s);
     real = null;
     player = null;
     real = {
-      open: function(channel,device,plate) {
-        console.log("点击了!,信息为："+channel+"------"+device+"---------"+plate);
+      open: function (channel, device, plate) {
+        console.log("点击了!,信息为：" + channel + "------" + device + "---------" + plate);
         let protocolType = 1;
         let obj = playList.find(p => p.device == device && p.channel == channel);
         if (obj) return; //已经在播放的则不能再播放
@@ -181,7 +173,7 @@ export default {
           alert(tidObj.msg);
         }
       },
-      close: function(device,channel) {
+      close: function (device, channel) {
         const channelArr = channel.split(',').map(p => p * 1)
         for (let i = 0; i < channelArr.length; i++) {
           let index = playList.findIndex(p => p.device == device && p.channel == channelArr[i]);
@@ -196,7 +188,7 @@ export default {
           playList.splice(index, 1);
         }
       },
-      openSpeak: function() {
+      openSpeak: function () {
         const device = document.getElementById('real_device').value.trim()
         const protocolType = Number(document.getElementById('real_protocol').value);
         const params = {
@@ -207,7 +199,7 @@ export default {
           console.log(res)
         })
       },
-      closeSpeak: function() {
+      closeSpeak: function () {
         const device = document.getElementById('real_device').value.trim()
         const protocolType = Number(document.getElementById('real_protocol').value);
         const params = {
@@ -221,7 +213,7 @@ export default {
     }
     let that = this;
     getCommonTreeListByTypeVideo().then(response => {
-      that.data=response.data;
+      that.data = response.data;
     });
     this.createPlayer();
   },
@@ -242,36 +234,31 @@ export default {
         // platform: platform || '', // 无效，已移除
         baseURL,
         isSwitchCodetypeOnFullscreen: false, //全屏是否切换高清，默认false
-        // click: that.onPlayClick(),
-        // playstart: that.onPlayStart(),
-        // playend: that.onPlayEnd(),
-        // snapshot: that.onSnapshot(),
-        // message: that.onMessage(),
       });
       console.log('byskplayer.js version: ' + player.version);
       console.log(player);
       // player.poster = '/poster.png'; //设置预览图片
       player.setPlayerNum(4); //设置视频画面
     },
-    clickVideo(device,channel) {
-      real.open(parseInt(channel),device,'通道1');
+    clickVideo(device, channel) {
+      real.open(parseInt(channel), device, '通道1');
     },
     clickAllVideo(device) {
       let videoDeviceIds = device.videodeviceids
-      if(videoDeviceIds.length > 0){
-        real.open(1,videoDeviceIds,'通道1');
-        real.open(2,videoDeviceIds,'通道2');
-        real.open(3,videoDeviceIds,'通道3');
-        real.open(4,videoDeviceIds,'通道4');
+      if (videoDeviceIds.length > 0) {
+        real.open(1, videoDeviceIds, '通道1');
+        real.open(2, videoDeviceIds, '通道2');
+        real.open(3, videoDeviceIds, '通道3');
+        real.open(4, videoDeviceIds, '通道4');
       }
-      this.openOnClose=videoDeviceIds;
+      this.openOnClose = videoDeviceIds;
     },
-    clickCloseVideo(device){
+    clickCloseVideo(device) {
       let videoDeviceIds = device.videodeviceids
-      if(videoDeviceIds.length > 0){
-        real.close(videoDeviceIds,'1,2,3,4');
+      if (videoDeviceIds.length > 0) {
+        real.close(videoDeviceIds, '1,2,3,4');
       }
-      this.openOnClose='';
+      this.openOnClose = '';
     },
     filterNode(value, data) {
       if (!value) return true;
@@ -286,12 +273,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/deep/.el-card__body{
-  padding: 0px!important;
+/deep/.el-card__body {
+  padding: 0px !important;
 }
 
-/deep/.aui-content > .el-tabs > .el-tabs__content {
-  padding: 0px!important;
+/deep/.aui-content>.el-tabs>.el-tabs__content {
+  padding: 0px !important;
 }
 
 /deep/.foot {
@@ -330,14 +317,16 @@ export default {
   bottom: 0px;
   width: 100%;
 }
-/deep/.title{
+
+/deep/.title {
   color: black;
   font-size: 20px;
   height: 30px;
   line-height: 30px;
   padding-left: 12px;
 }
-/deep/.iconfont{
+
+/deep/.iconfont {
   color: #49bbcf;
   font-size: 20px;
   border: 2px solid #393b47;
@@ -346,38 +335,45 @@ export default {
   margin: 5px;
   display: block;
 }
-/deep/.frameFont{
+
+/deep/.frameFont {
   color: #516f8a;
 }
-/deep/.frame{
+
+/deep/.frame {
   text-align: center;
   width: 20%;
   float: left;
   flex: 1;
 }
-/deep/.frame img{
+
+/deep/.frame img {
   margin: 0 auto;
   margin-bottom: 8px;
 }
-/deep/.button{
+
+/deep/.button {
   display: flex;
   padding: 10px 4px;
   flex-direction: row;
   flex-wrap: wrap;
 }
-/deep/.font{
+
+/deep/.font {
   font-size: 16px;
   padding-top: 4%;
 }
+
 /deep/#containers {
   width: 100%;
   height: 90%;
   display: block;
 }
+
 /deep/.byskplayer-layout-wrapper .player {
-  background-color: #a8aaad!important;
+  background-color: #a8aaad !important;
 }
-/deep/.el-tree-node.is-current > .el-tree-node__content {
+
+/deep/.el-tree-node.is-current>.el-tree-node__content {
   background-color: rgb(190, 208, 190) !important;
-}
-</style>
+}</style>

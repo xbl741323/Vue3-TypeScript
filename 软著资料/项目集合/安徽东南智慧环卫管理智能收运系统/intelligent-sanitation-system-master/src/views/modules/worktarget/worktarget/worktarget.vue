@@ -1,3 +1,4 @@
+<!-- 垃圾车运输管理 -->
 <template>
   <el-card shadow="never" class="aui-card--fill">
     <div class="mod-worktarget__worktarget}">
@@ -5,11 +6,12 @@
         <el-form-item label="部门">
           <dept-tree v-model="dataForm.orgId" @change="changeOrg" placeholder="请选择"></dept-tree>
         </el-form-item>
-        <el-form-item label="环卫设施类型" v-if="showWorktargetType">
-          <worktarget-type-select v-model="dataForm.worktargetTypeId" @changeWorktargetType="changeWorktargetType"></worktarget-type-select>
+        <el-form-item label="垃圾车收运类型" v-if="showWorktargetType">
+          <worktarget-type-select v-model="dataForm.worktargetTypeId"
+            @changeWorktargetType="changeWorktargetType"></worktarget-type-select>
         </el-form-item>
         <el-form-item label="名称">
-          <el-input v-model="dataForm.name" ></el-input>
+          <el-input v-model="dataForm.name"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="getDataList()">{{ $t('query') }}</el-button>
@@ -21,14 +23,17 @@
           <el-button type="info" @click="exportHandle()">{{ $t('export') }}</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="$hasPermission('worktarget:worktarget:save')" type="primary" @click="addOrUpdateHandle()">{{ $t('add') }}</el-button>
+          <el-button v-if="$hasPermission('worktarget:worktarget:save')" type="primary" @click="addOrUpdateHandle()">{{
+            $t('add') }}</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="$hasPermission('worktarget:worktarget:delete')" type="danger" @click="deleteHandle()">{{ $t('deleteBatch') }}</el-button>
+          <el-button v-if="$hasPermission('worktarget:worktarget:delete')" type="danger" @click="deleteHandle()">{{
+            $t('deleteBatch') }}</el-button>
         </el-form-item>
       </el-form>
       <div class="table-container" :style="[{ width: foldStatus ? '60%' : '0px' }]">
-        <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle" style="width: 100%;" @row-click="onRowClick" @select="onRowSelect">
+        <el-table v-loading="dataListLoading" :data="dataList" border @selection-change="dataListSelectionChangeHandle"
+          style="width: 100%;" @row-click="onRowClick" @select="onRowSelect">
           <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
           <el-table-column prop="name" label="名称" header-align="center" align="center"></el-table-column>
           <el-table-column prop="worktargetTypeName" label="设施类型" header-align="center" align="center"></el-table-column>
@@ -37,20 +42,17 @@
           <!-- <el-table-column prop="contacts" label="联系人" header-align="center" align="center"></el-table-column> -->
           <el-table-column :label="$t('handle')" fixed="right" header-align="center" align="center" width="150">
             <template slot-scope="scope">
-              <el-button v-if="$hasPermission('worktarget:worktarget:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
-              <el-button v-if="$hasPermission('worktarget:worktarget:delete')" type="text" size="small" @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
+              <el-button v-if="$hasPermission('worktarget:worktarget:update')" type="text" size="small"
+                @click="addOrUpdateHandle(scope.row.id)">{{ $t('update') }}</el-button>
+              <el-button v-if="$hasPermission('worktarget:worktarget:delete')" type="text" size="small"
+                @click="deleteHandle(scope.row.id)">{{ $t('delete') }}</el-button>
             </template>
           </el-table-column>
         </el-table>
-          <el-pagination :style="`${foldStatus ? '' : 'display:none'}`"
-          :current-page="page"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="limit"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="pageSizeChangeHandle"
-          @current-change="pageCurrentChangeHandle">
-          </el-pagination>
+        <el-pagination :style="`${foldStatus ? '' : 'display:none'}`" :current-page="page" :page-sizes="[10, 20, 50, 100]"
+          :page-size="limit" :total="total" layout="total, sizes, prev, pager, next, jumper"
+          @size-change="pageSizeChangeHandle" @current-change="pageCurrentChangeHandle">
+        </el-pagination>
         <div class="fold_btn">
           <i v-show="!foldStatus" class="el-icon-d-arrow-right" @click="clickFold" />
           <i v-show="foldStatus" class="el-icon-d-arrow-left" @click="clickFold" />
@@ -73,7 +75,7 @@ import shopEditing from '@/assets/img/shopEditing.png'
 import AMap from 'AMap'
 export default {
   mixins: [mixinViewModule],
-  data () {
+  data() {
     return {
       foldStatus: true,
       amap: '',
@@ -84,9 +86,9 @@ export default {
         plugin: {
         },
         events: {
-          init () {
+          init() {
           },
-          click (e) {
+          click(e) {
           }
         }
       },
@@ -116,7 +118,7 @@ export default {
     }
   },
   watch: {
-    markerList (val) {
+    markerList(val) {
       this.cleanMap()
       if (this.markerList && this.markerList.length > 0) {
         for (var i = 0; i < this.markerList.length; i++) {
@@ -128,26 +130,26 @@ export default {
     }
   },
   computed: {
-    showWorktargetType () {
+    showWorktargetType() {
       return !this.worktargetTypeId
     },
-    showPoint () {
+    showPoint() {
       return this.plftype == 1
     },
-    showPolyline () {
+    showPolyline() {
       return this.plftype == 2 || this.plftype == 3
     },
-    ploygonColor () {
+    ploygonColor() {
       return (ploygonObj) => {
         return this.activeId == ploygonObj.id ? 'red' : 'blue'
       }
     },
-    ploylineColor () {
+    ploylineColor() {
       return (ploylineObj) => {
         return this.activeId == ploylineObj.id ? 'red' : 'blue'
       }
     },
-    markerImg () {
+    markerImg() {
       return (marker) => {
         return this.activeId == marker.id ? 'img/start.png' : 'img/village48.png'
       }
@@ -157,7 +159,7 @@ export default {
     AddOrUpdate
   },
 
-  mounted () {
+  mounted() {
     if (this.$route.meta.cusParams && this.$route.meta.cusParams.worktargetTypeId) {
       this.worktargetTypeId = this.$route.meta.cusParams.worktargetTypeId
       this.dataForm.worktargetTypeId = this.worktargetTypeId
@@ -169,21 +171,21 @@ export default {
           this.worktargetType = res.data
           this.plftype = this.worktargetType.plftype
           this.worktargetTypeName = this.worktargetType.worktargetTypeName
-        }).catch(() => {})
+        }).catch(() => { })
       }
     }
     this.initMap()
     this.query()
   },
   methods: {
-    initMap () {
+    initMap() {
       var divId = 'worktarget-container_' + this.worktargetTypeId
       var amap = new AMap.Map(divId, {
         ...this.mapConfig
       })
       this.amap = amap
     },
-    query () {
+    query() {
       this.dataListLoading = true
       this.$http.get(
         this.mixinViewModuleOptions.getDataListURL,
@@ -231,9 +233,9 @@ export default {
         this.dataListLoading = false
       })
     },
-    getWorktargetTypeList () {
+    getWorktargetTypeList() {
       return this.$http
-        .get('/worktarget/worktargettype/list', { params: { } })
+        .get('/worktarget/worktargettype/list', { params: {} })
         .then(({ data: res }) => {
           if (res.code != 0) {
             return this.$message.error(res.msg)
@@ -246,17 +248,17 @@ export default {
             }
           }
         })
-        .catch(() => {})
+        .catch(() => { })
     },
     // #region 地图
-    clickFold () {
+    clickFold() {
       if (this.foldStatus) {
         this.foldStatus = false
       } else {
         this.foldStatus = true
       }
     },
-    createMarker (markerObj) {
+    createMarker(markerObj) {
       if (markerObj.plftype == 1) {
         if (markerObj.lat && markerObj.lng) {
           var marker = new AMap.Marker({
@@ -288,11 +290,11 @@ export default {
         this.markerMap.set(markerObj.id, polygon)
       }
     },
-    markerClickCallback (e) {
+    markerClickCallback(e) {
       let marker = e.target.getExtData()
       this.openWindowInfo(marker)
     },
-    openWindowInfo (marker) {
+    openWindowInfo(marker) {
       var info = []
       info.push('<p>名称：' + marker.name + '</p>')
       info.push('<p>部门：' + marker.orgName + '</p>')
@@ -306,7 +308,7 @@ export default {
 
       infoWindow.open(this.amap, [marker.lng, marker.lat])
     },
-    unActiveShow () {
+    unActiveShow() {
       if (this.activeMarker) {
         var extData = this.activeMarker.getExtData()
         if (extData) {
@@ -324,7 +326,7 @@ export default {
         }
       }
     },
-    activeShow (markerId) {
+    activeShow(markerId) {
       this.unActiveShow()
       var marker = this.markerMap.get(markerId)
       if (marker != null) {
@@ -346,21 +348,21 @@ export default {
       }
       this.activeMarker = marker
     },
-    cleanMap () {
+    cleanMap() {
       if (this.amap) {
         this.amap.clearMap()
       }
     },
-    zoomEnd (e) {
+    zoomEnd(e) {
       this.map.zoom = e.target.getZoom()
     },
-    onInput (value) {
+    onInput(value) {
       this.getDataList()
     },
-    onRowClick (row, column, event) {
+    onRowClick(row, column, event) {
       this.activeShow(row.id)
     },
-    onRowSelect (selection, row) {
+    onRowSelect(selection, row) {
       var isExist = selection.find(x => x.id == row.id)
       if (isExist) {
         this.map.zoom = 14
@@ -370,7 +372,7 @@ export default {
         }
       }
     },
-    addOrUpdateHandle (id) {
+    addOrUpdateHandle(id) {
       this.addOrUpdateVisible = true
       this.$nextTick(() => {
         this.$refs.addOrUpdate.dataForm.id = id
@@ -384,10 +386,10 @@ export default {
         this.$refs.addOrUpdate.init()
       })
     },
-    changeWorktargetType (worktargetType) {
+    changeWorktargetType(worktargetType) {
       this.dataForm.worktargetTypeId = worktargetType.id
     },
-    changeOrg (org) {
+    changeOrg(org) {
       this.dataForm.orgId = org.id
     }
   }
@@ -414,6 +416,7 @@ export default {
     cursor: pointer;
     margin-top: -50px;
     text-align: center;
+
     i {
       font-size: 18px;
       line-height: 100px;
